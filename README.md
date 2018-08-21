@@ -1,10 +1,12 @@
 # Projector2Assembler
 Space Engineers script: queue all the components needed to build a blueprint on your assember.
 
+Projector2Assembler by Juggernaut93
+
 With some code by nihilus from here:
 https://forum.keenswh.com/threads/adding-needed-projector-bp-components-to-assembler.7396730/#post-1287067721
 
-# Setup
+## Setup
    - You obviously need a programming block, a projector, an assembler
    - Run the script with this argument: ProjectorName;AssemblerName;[lightArmor];[staggeringFactor];[fewFirst]
        - [] indicates it's an optional parameter
@@ -18,7 +20,7 @@ https://forum.keenswh.com/threads/adding-needed-projector-bp-components-to-assem
            sorted by amount. If false, the order is undefined (currently it's alphabetical, but it's not
            guaranteed to stay the same in the future).
 
-# How it works
+## How it works
    - The script gets from the projector the remaining blocks to build. Unfortunately, the projector is not
        precise about the type of armor blocks to build and only gives a generic "armor blocks". You can then
        specify if you want to assume all the blocks are light or heavy armor blocks, but keep in mind that
