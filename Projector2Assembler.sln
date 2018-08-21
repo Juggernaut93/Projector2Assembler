@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projector2Assembler", "ProjectorResourceBuilder\Projector2Assembler.csproj", "{4F97BC68-DA86-4373-AB3E-4E84222C51B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Debug|x64.ActiveCfg = Debug|x64
+		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Debug|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD26D83A-23B9-4EA6-94E6-D43DBB03EA89}
+	EndGlobalSection
+EndGlobal
