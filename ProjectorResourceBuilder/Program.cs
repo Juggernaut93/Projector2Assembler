@@ -101,11 +101,14 @@ namespace IngameScript
                     projectorName = spl[0];
                     assemblerName = spl[1];
                     if (spl.Length > 2)
-                        lightArmor = bool.Parse(spl[2]);
+                        if (spl[2] != "")
+                            lightArmor = bool.Parse(spl[2]);
                     if (spl.Length > 3)
-                        staggeringFactor = int.Parse(spl[3]);
+                        if (spl[3] != "")
+                            staggeringFactor = int.Parse(spl[3]);
                     if (spl.Length > 4)
-                        fewFirst = bool.Parse(spl[4]);
+                        if (spl[4] != "")
+                            fewFirst = bool.Parse(spl[4]);
                 }
                 catch (Exception)
                 {
