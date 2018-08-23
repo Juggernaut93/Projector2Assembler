@@ -98,8 +98,11 @@ namespace IngameScript
                 try
                 {
                     var spl = argument.Split(';');
-                    projectorName = spl[0];
-                    assemblerName = spl[1];
+                    if (spl[0] != "")
+                        projectorName = spl[0];
+                    if (spl.Length > 1)
+                        if (spl[1] != "")
+                            assemblerName = spl[1];
                     if (spl.Length > 2)
                         if (spl[2] != "")
                             lightArmor = bool.Parse(spl[2]);
@@ -112,7 +115,7 @@ namespace IngameScript
                 }
                 catch (Exception)
                 {
-                    Echo("Wrong argument(s). Format: ProjectorName;AssemblerName;[lightArmor];[staggeringFactor];[fewFirst]. ReadMe for more info.");
+                    Echo("Wrong argument(s). Format: [ProjectorName];[AssemblerName];[lightArmor];[staggeringFactor];[fewFirst]. See Readme for more info.");
                     return;
                 }
             }
