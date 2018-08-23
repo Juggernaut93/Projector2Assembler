@@ -9,10 +9,10 @@
  *   
  *   SETUP:
  *      - You obviously need a programming block, a projector, an assembler
- *      - Run the script with this argument: ProjectorName;AssemblerName;[lightArmor];[staggeringFactor];[fewFirst]
+ *      - Run the script with this argument: [ProjectorName];[AssemblerName];[lightArmor];[staggeringFactor];[fewFirst]
  *          - [] indicates it's an optional parameter
- *          - ProjectorName is the name of the projector with the blueprint you want to build
- *          - AssemblerName is the name of the assembler that will produce the needed components
+ *          - ProjectorName (default: Projector) is the name of the projector with the blueprint you want to build
+ *          - AssemblerName (default: Assembler) is the name of the assembler that will produce the needed components
  *          - lightArmor is true (default) or false and tells the script to assume all the armor blocks listed by
  *              the projector are respectively Light Armor Blocks or Heavy Armor Blocks
  *          - staggeringFactor is a non-negative integer (10 by default) that tells the script how to stagger the
