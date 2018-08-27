@@ -1,5 +1,5 @@
 # Projector2Assembler
-Space Engineers script: queue all the components needed to build a blueprint on your assember.
+Space Engineers script: queue all the components needed to build a blueprint on your assembler.
 
 Projector2Assembler by Juggernaut93
 
