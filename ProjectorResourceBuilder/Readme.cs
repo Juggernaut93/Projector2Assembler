@@ -4,10 +4,13 @@
  * 
  *   Projector2Assembler by Juggernaut93
  *   
+ *   Queue all the components needed to build a blueprint on your assembler.
+ *   
  *   With some code by nihilus from here:
  *   https://forum.keenswh.com/threads/adding-needed-projector-bp-components-to-assembler.7396730/#post-1287067721
  *   
  *   CHECK ALSO: Projector2LCD (also by Juggernaut93) to show info about missing components, ingots and ores.
+ *   Link: https://steamcommunity.com/sharedfiles/filedetails/?id=1500259551
  *   
  *   SETUP:
  *      - You obviously need a programming block, a projector, an assembler
@@ -21,12 +24,12 @@
  *              production
  *          - fewFirst is true (default) or false and tells the script to queue the components in the assembler
  *              sorted by amount. If false, the order is undefined (currently it's alphabetical, but it's not
- *              guaranteed to stay the same in the future).
+ *              guaranteed to stay the same in the future)
  *          - onlyRemaining is true or false (default) and tells the script whether to check for the components
  *              already in stock in the entire grid and to only queue the missing components in the assembler.
  *              By default the script doesn't check for subgrids. You can turn the feature on by setting the variable
  *              inventoryFromSubgrids to true. WARNING: queuing more than one blueprint at a time with this option
- *              on would result in the available components being subtracted by each blueprint, use CAREFULLY.
+ *              on would result in the available components being subtracted by each blueprint, use CAREFULLY
  *  
  *   HOW IT WORKS:
  *      - The script gets from the projector the remaining blocks to build. Unfortunately, the projector is not
