@@ -22,6 +22,8 @@ namespace IngameScript
         /***************************************/
         /************ CONFIGURATION ************/
         /***************************************/
+        private const int ASSEMBLER_EFFICIENCY = 3; // 1 for realistic, 3 for 3x, 10 for 10x
+
         private readonly int compWidth = 7, ingotWidth = 7, oreWidth = 7; // width of shown numerical fields (including dots and suffixes - k, M, G)
         private readonly int ingotDecimals = 2, oreDecimals = 2; // max decimal digits to show
         private readonly bool inventoryFromSubgrids = false; // consider inventories on subgrids when computing available materials
@@ -510,7 +512,7 @@ namespace IngameScript
             {
                 foreach (var ing in componentsToIngots[StripDef(pair.Key)])
                 {
-                    AddCountToDict<Ingots>(ingotsNeeded, ing.Key, ing.Value * pair.Value);
+                    AddCountToDict<Ingots>(ingotsNeeded, ing.Key, ing.Value * (pair.Value / (float)ASSEMBLER_EFFICIENCY));
                 }
             }
 

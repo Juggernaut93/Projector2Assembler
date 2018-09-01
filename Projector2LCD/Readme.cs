@@ -32,6 +32,10 @@
  *              be considered as covered by a Yield Module. This value will affect calculations regarding how
  *              much of each ore is needed for your blueprint. If you don't specify yieldPorts, the script
  *              will use the average effectiveness of the ENABLED refineries on your grid
+ *      - >>> IMPORTANT <<<
+ *        You HAVE to set the ASSEMBLER_EFFICIENCY variable at the top of the script according to your world
+ *        settings: if you have set the assembler efficiency to realistic, set the variable to 1; if you have set
+ *        it to 3x, then set the variable to 3; if you have set it to 10x, then set the variable to 10;
  *      - The script will run indefinitely with the specified settings. To change settings, just re-run the
  *          script with the different parameters.
  *  
