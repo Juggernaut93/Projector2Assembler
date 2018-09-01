@@ -560,13 +560,16 @@ namespace IngameScript
 
         private Size GetOutputSize(string text)
         {
-            string[] lines = text.TrimEnd().Split('\n');
+            string[] lines = text.Split('\n');
+            int i = lines.Length - 1;
+            while (string.IsNullOrWhiteSpace(lines[i]))
+                i--;
             Size ret = new Size();
-            ret.Height = lines.Length;
+            ret.Height = i + 1;
             ret.Width = 0;
             foreach (var line in lines)
             {
-                int len = line.TrimEnd().Length;
+                int len = line.Length;
                 if (len > ret.Width)
                     ret.Width = len;
             }
@@ -762,7 +765,7 @@ namespace IngameScript
                     //separator = "|";
                     amountStr = FormatNumber(amountPresent, compWidth, 0);
                     neededStr = FormatNumber(component.Value, compWidth, 0);
-                    missingStr = missing > 0 ? FormatNumber(missing, compWidth, 0) : "";
+                    missingStr = missing > 0 ? FormatNumber(missing, compWidth, 0) : new string(' ', compWidth);
                     warnStr = ">> ";
                     okStr = "   ";
                 }
@@ -779,7 +782,8 @@ namespace IngameScript
             var ingotsTotalNeeded = GetTotalIngots(compList);
             List<KeyValuePair<Ingots, VRage.MyFixedPoint>> missingIngots = new List<KeyValuePair<Ingots, VRage.MyFixedPoint>>();
             output = localProjectorName + "\n" + lcd2Title.ToUpper() + "\n\n";
-            string decimalFmt = (ingotDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", ingotDecimals));
+            //string decimalFmt = (ingotDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", ingotDecimals));
+            string decimalFmt = (ingotDecimals > 0 ? "." : "") + new string('0', ingotDecimals);
             for (int i = 0; i < ingotsList.Count; i++)
             {
                 var ingot = ingotsList[i];
@@ -801,7 +805,7 @@ namespace IngameScript
                     amountStr = FormatNumber(amountPresent, ingotWidth, ingotDecimals);
                     neededStr = FormatNumber(ingot.Value, ingotWidth, ingotDecimals);
                     totalNeededStr = FormatNumber(ingotsTotalNeeded[i].Value, ingotWidth, ingotDecimals);
-                    missingStr = missing > 0 ? FormatNumber(missing, ingotWidth, ingotDecimals) : "";
+                    missingStr = missing > 0 ? FormatNumber(missing, ingotWidth, ingotDecimals) : new string(' ', ingotWidth);
                     warnStr = ">> ";
                     okStr = "   ";
                 }
@@ -818,7 +822,8 @@ namespace IngameScript
             var oresTotalNeeded = GetTotalOres(ingotsTotalNeeded);
             //List<KeyValuePair<Ores, VRage.MyFixedPoint>> missingOres = new List<KeyValuePair<Ores, VRage.MyFixedPoint>>();
             output = localProjectorName + "\n" + lcd3Title.ToUpper() + "\n\n";
-            decimalFmt = (oreDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", oreDecimals));
+            //decimalFmt = (oreDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", oreDecimals));
+            decimalFmt = (oreDecimals > 0 ? "." : "") + new string('0', oreDecimals);
             string scrapOutput = "";
             for (int i = 0; i < oresList.Count; i++)
             {
@@ -834,6 +839,7 @@ namespace IngameScript
                 //missingOres.Add(new KeyValuePair<Ores, VRage.MyFixedPoint>(ores.Key, VRage.MyFixedPoint.Max(0, missing)));
                 string missingStr = missing > 0 ? string.Format(normalFmt, (decimal)missing) : "";
                 string warnStr = ">>", okStr = "";
+                string na = "-", endNa = "";
                 if (lcd3 != null && lcd3.Font.Equals(monospaceFontName))
                 {
                     oreName = String.Format("{0,-" + maxOreLength + "}", oreName);
@@ -841,16 +847,18 @@ namespace IngameScript
                     amountStr = FormatNumber(amountPresent, oreWidth, oreDecimals);
                     neededStr = FormatNumber(ores.Value, oreWidth, oreDecimals);
                     totalNeededStr = FormatNumber(oresTotalNeeded[i].Value, oreWidth, oreDecimals);
-                    missingStr = missing > 0 ? FormatNumber(missing, oreWidth, oreDecimals) : "";
+                    missingStr = missing > 0 ? FormatNumber(missing, oreWidth, oreDecimals) : new string(' ', oreWidth);
                     warnStr = ">> ";
                     okStr = "   ";
+                    na = new string(' ', (oreWidth - 1) / 2) + "-" + new string(' ', oreWidth - 1 - (oreWidth - 1) / 2);
+                    endNa = new string(' ', oreWidth);
                 }
                 if (ores.Key == Ores.Scrap)
                 {
                     if (amountPresent > 0) // if 0 scrap, ignore row
                     {
-                        string na = string.Concat(Enumerable.Repeat(" ", (oreWidth - 1) / 2)) + "-" + string.Concat(Enumerable.Repeat(" ", oreWidth - 1 - (oreWidth - 1) / 2));
-                        output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", okStr, oreName, amountStr, separator, na, na, "");
+                        //string na = string.Concat(Enumerable.Repeat(" ", (oreWidth - 1) / 2)) + "-" + string.Concat(Enumerable.Repeat(" ", oreWidth - 1 - (oreWidth - 1) / 2));
+                        output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", okStr, oreName, amountStr, separator, na, na, endNa);
                         var savedIron = amountPresent * conversionRates[Ores.Scrap] * (1f / (float)conversionRates[Ores.Iron]);
                         scrapOutput = "\n*" + String.Format(scrapMetalMessage, FormatNumber(amountPresent, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Scrap], FormatNumber(savedIron, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Iron]) + "\n";
                     }
