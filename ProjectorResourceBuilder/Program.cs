@@ -128,7 +128,7 @@ namespace IngameScript
             IMyProjector projector = GridTerminalSystem.GetBlockWithName(projectorName) as IMyProjector;
             if (projector == null)
             {
-                Echo("The specified projector name is not valid. No assembler found.");
+                Echo("The specified projector name is not valid. No projector found.");
                 return;
             }
 
