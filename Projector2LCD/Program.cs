@@ -25,6 +25,7 @@ namespace IngameScript
         private readonly int compWidth = 7, ingotWidth = 7, oreWidth = 7; // width of shown numerical fields (including dots and suffixes - k, M, G)
         private readonly int ingotDecimals = 2, oreDecimals = 2; // max decimal digits to show
         private readonly bool inventoryFromSubgrids = false; // consider inventories on subgrids when computing available materials
+        private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
         private readonly bool wideLCDs = true; // if false, 1x1 LCDs are implied
         /**********************************************/
@@ -637,7 +638,7 @@ namespace IngameScript
                 }
                 catch (Exception)
                 {
-                    Echo("Wrong argument(s). Format: [ProjectorName];[LCDName1];[LCDName2];[lightArmor];[yieldPorts]. See Readme for more info.");
+                    Echo("Wrong argument(s). Format: [ProjectorName];[LCDName1];[LCDName2];[LCDName3];[lightArmor];[yieldPorts]. See Readme for more info.");
                     Runtime.UpdateFrequency = UpdateFrequency.None;
                     return;
                 }
@@ -679,7 +680,7 @@ namespace IngameScript
             if (averageEffectivenesses) // dynamically update average refinery efficiency
             {
                 List<IMyRefinery> refineries = new List<IMyRefinery>();
-                GridTerminalSystem.GetBlocksOfType<IMyRefinery>(refineries, refinery => refinery.CubeGrid == Me.CubeGrid && refinery.Enabled);
+                GridTerminalSystem.GetBlocksOfType<IMyRefinery>(refineries, refinery => (refinery.CubeGrid == Me.CubeGrid || refineriesFromSubgrids) && refinery.Enabled);
                 if (refineries.Count == 0)
                 {
                     effectivenessMultiplier = 1; // no refineris found; use default
