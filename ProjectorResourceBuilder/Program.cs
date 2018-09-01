@@ -19,6 +19,14 @@ namespace IngameScript
 {
     partial class Program : MyGridProgram
     {
+        /***************************************/
+        /************ CONFIGURATION ************/
+        /***************************************/
+        private readonly bool inventoryFromSubgrids = false; // consider inventories on subgrids when computing available materials
+        /**********************************************/
+        /************ END OF CONFIGURATION ************/
+        /**********************************************/
+
         Dictionary<string, Dictionary<string, int>> blueprints = new Dictionary<string, Dictionary<string, int>>();
 
         public Program()
@@ -86,52 +94,8 @@ namespace IngameScript
 
         }
 
-        public void Main(string argument)
+        private List<KeyValuePair<string, int>> GetTotalComponents(IMyProjector projector)
         {
-            string projectorName = "Projector", assemblerName = "Assembler";
-            bool lightArmor = true;
-            int staggeringFactor = 10; // set 1 to not stagger
-            bool fewFirst = true;
-
-            if (!String.IsNullOrEmpty(argument))
-            {
-                try
-                {
-                    var spl = argument.Split(';');
-                    if (spl[0] != "")
-                        projectorName = spl[0];
-                    if (spl.Length > 1)
-                        if (spl[1] != "")
-                            assemblerName = spl[1];
-                    if (spl.Length > 2)
-                        if (spl[2] != "")
-                            lightArmor = bool.Parse(spl[2]);
-                    if (spl.Length > 3)
-                        if (spl[3] != "")
-                            staggeringFactor = int.Parse(spl[3]);
-                    if (spl.Length > 4)
-                        if (spl[4] != "")
-                            fewFirst = bool.Parse(spl[4]);
-                }
-                catch (Exception)
-                {
-                    Echo("Wrong argument(s). Format: [ProjectorName];[AssemblerName];[lightArmor];[staggeringFactor];[fewFirst]. See Readme for more info.");
-                    return;
-                }
-            }
-
-            if (staggeringFactor <= 0)
-            {
-                Echo("Invalid staggeringFactor: must be an integer greater than 0.");
-                return;
-            }
-            IMyProjector projector = GridTerminalSystem.GetBlockWithName(projectorName) as IMyProjector;
-            if (projector == null)
-            {
-                Echo("The specified projector name is not valid. No projector found.");
-                return;
-            }
-
             var blocks = projector.RemainingBlocksPerType;
             char[] delimiters = new char[] { ',' };
             char[] remove = new char[] { '[', ']' };
@@ -169,7 +133,124 @@ namespace IngameScript
             addComponents(totalComponents, getComponents(armorType), armors);
 
             var compList = totalComponents.ToList();
+            //compList.Sort((x, y) => string.Compare(TranslateDef(x.Key), TranslateDef(y.Key)));
             compList.Sort((x, y) => string.Compare(x.Key, y.Key));
+
+            return compList;
+        }
+
+        private void AddCountToDict<T>(Dictionary<T, int> dic, T key, int amount)
+        {
+            if (dic.ContainsKey(key))
+            {
+                dic[key] += amount;
+            }
+            else
+            {
+                dic[key] = amount;
+            }
+        }
+
+        private int GetCountFromDic<T>(Dictionary<T, int> dic, T key)
+        {
+            if (dic.ContainsKey(key))
+            {
+                return dic[key];
+            }
+            return 0;
+        }
+
+        private List<KeyValuePair<string, int>> SubtractPresentComponents(List<KeyValuePair<string, int>> compList)
+        {
+            var cubeBlocks = new List<IMyCubeBlock>();
+            GridTerminalSystem.GetBlocksOfType<IMyCubeBlock>(cubeBlocks, block => block.CubeGrid == Me.CubeGrid || inventoryFromSubgrids);
+
+            Dictionary<string, int> componentAmounts = new Dictionary<string, int>();
+            foreach (var b in cubeBlocks)
+            {
+                if (b.HasInventory)
+                {
+                    for (int i = 0; i < b.InventoryCount; i++)
+                    {
+                        var itemList = b.GetInventory(i).GetItems();
+                        foreach (var item in itemList)
+                        {
+                            if (item.Content.TypeId.ToString().Equals("MyObjectBuilder_Component"))
+                            {
+                                AddCountToDict(componentAmounts, item.Content.SubtypeId.ToString(), item.Amount.ToIntSafe());
+                            }
+                        }
+                    }
+                }
+            }
+
+            List<KeyValuePair<string, int>> ret = new List<KeyValuePair<string, int>>();
+            foreach (var comp in compList)
+            {
+                string subTypeId = comp.Key.Replace("MyObjectBuilder_BlueprintDefinition/", "").Replace("Component", "");
+                ret.Add(new KeyValuePair<string, int>(comp.Key, Math.Max(0, comp.Value - GetCountFromDic(componentAmounts, subTypeId))));
+            }
+            return ret;
+        }
+
+        private bool lightArmor;
+
+        public void Main(string argument)
+        {
+            string projectorName = "Projector", assemblerName = "Assembler";
+            int staggeringFactor = 10; // set 1 to not stagger
+            bool fewFirst = true;
+            lightArmor = true;
+            bool onlyRemaining = false;
+
+            if (!String.IsNullOrEmpty(argument))
+            {
+                try
+                {
+                    var spl = argument.Split(';');
+                    if (spl[0] != "")
+                        projectorName = spl[0];
+                    if (spl.Length > 1)
+                        if (spl[1] != "")
+                            assemblerName = spl[1];
+                    if (spl.Length > 2)
+                        if (spl[2] != "")
+                            lightArmor = bool.Parse(spl[2]);
+                    if (spl.Length > 3)
+                        if (spl[3] != "")
+                            staggeringFactor = int.Parse(spl[3]);
+                    if (spl.Length > 4)
+                        if (spl[4] != "")
+                            fewFirst = bool.Parse(spl[4]);
+                    if (spl.Length > 5)
+                        if (spl[5] != "")
+                            onlyRemaining = bool.Parse(spl[5]);
+                }
+                catch (Exception)
+                {
+                    Echo("Wrong argument(s). Format: [ProjectorName];[AssemblerName];[lightArmor];[staggeringFactor];[fewFirst];[onlyRemaining]. See Readme for more info.");
+                    return;
+                }
+            }
+
+            if (staggeringFactor <= 0)
+            {
+                Echo("Invalid staggeringFactor: must be an integer greater than 0.");
+                return;
+            }
+            IMyProjector projector = GridTerminalSystem.GetBlockWithName(projectorName) as IMyProjector;
+            if (projector == null)
+            {
+                Echo("The specified projector name is not valid. No projector found.");
+                return;
+            }
+
+            var compList = GetTotalComponents(projector);
+            
+            if (onlyRemaining)
+            {
+                compList = SubtractPresentComponents(compList);
+            }
 
             string output = "";
             foreach (var component in compList)
