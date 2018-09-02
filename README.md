@@ -1,4 +1,4 @@
-A set of Space Engineers scripts to produce and track info about blueprint building.
+A set of Space Engineers scripts to produce and track info about blueprint and components building.
 
 Import the solution in Visual Studio 2017 with [Malware's Development Kit for Space Engineers (MDK-SE)](https://github.com/malware-dev/MDK-SE) installed. Version 15.8 or higher is required if you want to use the most recent version of MDK-SE.
 
@@ -9,3 +9,7 @@ Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=148827859
 [**Projector2LCD**](Projector2LCD): show info about missing components, ingots and ores for your blueprint.
 
 Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=1500259551
+
+[**Assembler Needs Calculator**](Assembler Needs Calculator): show info about missing ingots and ores for your assemblers.
+
+Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=1501171322
