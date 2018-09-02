@@ -10,8 +10,8 @@
  *   Link: https://steamcommunity.com/sharedfiles/filedetails/?id=1500259551
  *   
  *   SETUP:
- *      - You need a programming block, assemblers and up to 3 LCD screens.
- *        The use of Monospace font is RECOMMENDED (but not mandatory).
+ *      - You need a programming block, assemblers and up to 3 LCD screens. Text panels, small and wide LCD
+ *        panels are supported. The use of Monospace font is RECOMMENDED (but not mandatory).
  *      - Run the script with this argument: [AssemblerGroupName];[LCDName1];[LCDName2];[LCDName3];[yieldPorts]
  *          - [] indicates it's an optional parameter
  *          - AssemblerGroupName is the name of the group of assemblers you want to show info about. If you
@@ -52,9 +52,7 @@
  *          - assemblersFromSubgrids specifies if assemblers on subgrids have to be considered when no
  *              assemblerGroupName is specified
  *          - autoResizeText specifies if text should be resized to fit the LCD screen. Only works if the LCD
- *              is set to Monospace font. Also see the wideLCDs parameter.
- *          - wideLCDs specifies if the LCD panels used are wide. The script cannot automatically determine
- *              if a panel is wide or not, so a manual configuration is required
+ *              is set to Monospace font.
  *          - fitOn2IfPossible determines if the script can try to fit the information about missing ores
  *              on the seconds LCD when the third LCD is not specified or invalid
  *      It is also possible to easily change the language of the text shown by modifying the strings in the

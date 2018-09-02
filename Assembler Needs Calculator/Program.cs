@@ -30,7 +30,6 @@ namespace IngameScript
         private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
         private readonly bool assemblersFromSubgrids = false; // consider assemblers on subgrids (if no assembler group is specified)
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
-        //private readonly bool wideLCDs = false; // if false, 1x1 LCDs are implied
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
         /**********************************************/
         /************ END OF CONFIGURATION ************/
