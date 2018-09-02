@@ -531,7 +531,8 @@ namespace IngameScript
             {
                 foreach (var ore in ingotToOres[pair.Key])
                 {
-                    AddCountToDict<Ores>(oresNeeded, ore, pair.Value * (1 / (0.8f * (float)conversionRates[ore] * (float)effectivenessMultiplier)));
+                    // conversion rate cannot be greater than 1
+                    AddCountToDict<Ores>(oresNeeded, ore, pair.Value * (1 / Math.Min(1f, 0.8f * (float)conversionRates[ore] * (float)effectivenessMultiplier)));
                 }
             }
 
