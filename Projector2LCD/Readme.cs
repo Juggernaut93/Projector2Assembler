@@ -16,8 +16,8 @@
  *   Link: https://steamcommunity.com/sharedfiles/filedetails/?id=1501171322
  *   
  *   SETUP:
- *      - You need a programming block, a projector and up to 3 LCD screens (preferably wide).
- *        The use of Monospace font is RECOMMENDED (but not mandatory).
+ *      - You need a programming block, a projector and up to 3 LCD screens. Text panels, small and wide LCD
+ *        panels are supported. The use of Monospace font is RECOMMENDED (but not mandatory).
  *      - Run the script with this argument: [ProjectorName];[LCDName1];[LCDName2];[LCDName3];[lightArmor];[yieldPorts]
  *          - [] indicates it's an optional parameter
  *          - ProjectorName is the name of the projector with the blueprint you want to show info about. If you
@@ -58,10 +58,7 @@
  *          - refineriesFromSubgrids specifies if refineries on subgrids have to be considered when computing
  *              average effectiveness
  *          - autoResizeText specifies if text should be resized to fit the LCD screen. Only works if the LCD
- *              is set to Monospace font. Also see the wideLCDs parameter.
- *          - wideLCDs specifies if the LCD panels used are wide. Wide panels are suggested given the amount
- *              of information shown. Unfortunately, the script cannot automatically determine if a panel is
- *              wide or not, so a manual configuration is required
+ *              is set to Monospace font.
  *      It is also possible to easily change the language of the text shown by modifying the strings in the
  *      section "LOCALIZATION STRINGS". Be careful not to remove the text in curly braces: it serves as
  *      a placeholder to be later filled with numerical or text values.
