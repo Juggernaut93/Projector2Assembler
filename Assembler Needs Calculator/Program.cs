@@ -30,7 +30,7 @@ namespace IngameScript
         private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
         private readonly bool assemblersFromSubgrids = false; // consider assemblers on subgrids (if no assembler group is specified)
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
-        private readonly bool wideLCDs = false; // if false, 1x1 LCDs are implied
+        //private readonly bool wideLCDs = false; // if false, 1x1 LCDs are implied
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
         /**********************************************/
         /************ END OF CONFIGURATION ************/
@@ -515,6 +515,32 @@ namespace IngameScript
             return ret;
         }
 
+        private enum LCDType
+        {
+            NORMAL, WIDE, OTHER
+        }
+
+        private LCDType GetLCDType(IMyTextPanel lcd)
+        {
+            if (smallLCDs.Contains(lcd.BlockDefinition.SubtypeName))
+                return LCDType.NORMAL;
+            if (wideLCDs.Contains(lcd.BlockDefinition.SubtypeName))
+                return LCDType.WIDE;
+            return LCDType.OTHER;
+        }
+
+        private LCDType CheckLCD(IMyTextPanel lcd)
+        {
+            if (lcd == null)
+                return LCDType.OTHER;
+            var type = GetLCDType(lcd);
+            if (type == LCDType.OTHER)
+            {
+                Echo(string.Format("Warning: {0} is an unsupported type of text panel (too small).", lcd.CustomName));
+            }
+            return type;
+        }
+
         private void ShowAndSetFontSize(IMyTextPanel lcd, string text)
         {
             lcd.WritePublicText(text);
@@ -527,8 +553,9 @@ namespace IngameScript
             if (size.Width == 0)
                 return;
 
-            float maxWidth = wideLCDs ? wideLCDWidth : LCDWidth;
-            float maxHeight = wideLCDs ? wideLCDHeight : LCDHeight;
+            LCDType type = GetLCDType(lcd);
+            float maxWidth = type == LCDType.WIDE ? wideLCDWidth : LCDWidth;
+            float maxHeight = type == LCDType.WIDE ? wideLCDHeight : LCDHeight;
 
             float maxFontSizeByWidth = maxWidth / size.Width;
             float maxFontSizeByHeight = maxHeight / size.Height;
@@ -548,6 +575,8 @@ namespace IngameScript
         private IMyTextPanel lcd1, lcd2, lcd3;
         private readonly double log2 = Math.Log(2);
         private const float lcdSizeCorrection = 0.15f;
+        private readonly string[] smallLCDs = new string[] { "SmallTextPanel", "SmallLCDPanel", "LargeTextPanel", "LargeLCDPanel" };
+        private readonly string[] wideLCDs = new string[] { "SmallLCDPanelWide", "LargeLCDPanelWide" };
         private const float wideLCDWidth = 52.75f - lcdSizeCorrection, wideLCDHeight = 17.75f - lcdSizeCorrection, LCDWidth = wideLCDWidth / 2, LCDHeight = wideLCDHeight;
 
         public void Main(string argument, UpdateType updateReason)
@@ -593,6 +622,15 @@ namespace IngameScript
                 Runtime.UpdateFrequency = UpdateFrequency.None;
                 return;
             }
+
+            LCDType type1, type2, type3;
+            // function already checks if null on the inside and returns OTHER in that case
+            if ((type1 = CheckLCD(lcd1)) == LCDType.OTHER)
+                lcd1 = null;
+            if ((type2 = CheckLCD(lcd2)) == LCDType.OTHER)
+                lcd2 = null;
+            if ((type3 = CheckLCD(lcd3)) == LCDType.OTHER)
+                lcd3 = null;
 
             // if no errors in arguments, then we can keep the script updating
             Runtime.UpdateFrequency = UpdateFrequency.Update100;
@@ -670,18 +708,24 @@ namespace IngameScript
 
             Me.CustomData = "";
 
-            string title;
+            string smallTitle, wideTitle;
             if (fromGroup)
-                title = string.Format(wideLCDs ? titleGroup : titleGroupSmallLCD, assemblerGroupName, assemblers.Count);
+            {
+                smallTitle = string.Format(titleGroupSmallLCD, assemblerGroupName, assemblers.Count);
+                wideTitle = string.Format(titleGroup, assemblerGroupName, assemblers.Count);
+            }
             else
-                title = string.Format(titleAuto, assemblers.Count);
+            {
+                smallTitle = wideTitle = string.Format(titleAuto, assemblers.Count);
+            }
+
 
             var compList = GetProductionComponents(assemblers);
 
 
             var ingotsList = GetTotalIngots(compList);
             List<KeyValuePair<Ingots, VRage.MyFixedPoint>> missingIngots = new List<KeyValuePair<Ingots, VRage.MyFixedPoint>>();
-            string output = title + "\n" + lcd2Title.ToUpper() + "\n\n";
+            string output = (type2 == LCDType.WIDE ? wideTitle : smallTitle) + "\n" + lcd2Title.ToUpper() + "\n\n";
             //string decimalFmt = (ingotDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", ingotDecimals));
             string decimalFmt = (ingotDecimals > 0 ? "." : "") + new string('0', ingotDecimals);
             for (int i = 0; i < ingotsList.Count; i++)
@@ -726,7 +770,7 @@ namespace IngameScript
             }
             else
             {
-                output = title + "\n" + lcd3Title.ToUpper() + "\n\n";
+                output = (type3 == LCDType.WIDE ? wideTitle : smallTitle) + "\n" + lcd3Title.ToUpper() + "\n\n";
             }
             //decimalFmt = (oreDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", oreDecimals));
             decimalFmt = (oreDecimals > 0 ? "." : "") + new string('0', oreDecimals);
@@ -803,7 +847,7 @@ namespace IngameScript
             Me.CustomData += output + "\n\n";
 
 
-            output = title + "\n" + lcd1Title.ToUpper() + "\n\n";
+            output = (type1 == LCDType.WIDE ? wideTitle : smallTitle) + "\n" + lcd1Title.ToUpper() + "\n\n";
             foreach (var component in compList)
             {
                 string subTypeId = component.Key.Replace("MyObjectBuilder_BlueprintDefinition/", "");
