@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projector2Assembler", "Proj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projector2LCD", "Projector2LCD\Projector2LCD.csproj", "{4B34726A-7914-469C-B4DD-6675E91B61BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler Needs Calculator", "Assembler Needs Calculator\Assembler Needs Calculator.csproj", "{FC94512E-340B-408F-A709-24E28D1F2C23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -16,6 +18,8 @@ Global
 		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Debug|x64.Build.0 = Debug|x64
 		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Debug|x64.ActiveCfg = Debug|x64
 		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Debug|x64.Build.0 = Debug|x64
+		{FC94512E-340B-408F-A709-24E28D1F2C23}.Debug|x64.ActiveCfg = Debug|x64
+		{FC94512E-340B-408F-A709-24E28D1F2C23}.Debug|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
