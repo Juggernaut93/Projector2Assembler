@@ -10,6 +10,6 @@ Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=148827859
 
 Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=1500259551
 
-[**Assembler Needs Calculator**](Assembler Needs Calculator): show info about missing ingots and ores for your assemblers.
+[**Assembler Needs Calculator**](Assembler%20Needs%20Calculator): show info about missing ingots and ores for your assemblers.
 
 Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=1501171322
