@@ -29,7 +29,6 @@ namespace IngameScript
         private readonly bool inventoryFromSubgrids = false; // consider inventories on subgrids when computing available materials
         private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
-        private readonly bool wideLCDs = true; // if false, 1x1 LCDs are implied
         /**********************************************/
         /************ END OF CONFIGURATION ************/
         /**********************************************/
@@ -579,6 +578,32 @@ namespace IngameScript
             return ret;
         }
 
+        private enum LCDType
+        {
+            NORMAL, WIDE, OTHER
+        }
+
+        private LCDType GetLCDType(IMyTextPanel lcd)
+        {
+            if (smallLCDs.Contains(lcd.BlockDefinition.SubtypeName))
+                return LCDType.NORMAL;
+            if (wideLCDs.Contains(lcd.BlockDefinition.SubtypeName))
+                return LCDType.WIDE;
+            return LCDType.OTHER;
+        }
+
+        private LCDType CheckLCD(IMyTextPanel lcd)
+        {
+            if (lcd == null)
+                return LCDType.OTHER;
+            var type = GetLCDType(lcd);
+            if (type == LCDType.OTHER)
+            {
+                Echo(string.Format("Warning: {0} is an unsupported type of text panel (too small).", lcd.CustomName));
+            }
+            return type;
+        }
+
         private void ShowAndSetFontSize(IMyTextPanel lcd, string text)
         {
             lcd.WritePublicText(text);
@@ -591,8 +616,9 @@ namespace IngameScript
             if (size.Width == 0)
                 return;
 
-            float maxWidth = wideLCDs ? wideLCDWidth : LCDWidth;
-            float maxHeight = wideLCDs ? wideLCDHeight : LCDHeight;
+            LCDType type = GetLCDType(lcd);
+            float maxWidth = type == LCDType.WIDE ? wideLCDWidth : LCDWidth;
+            float maxHeight = type == LCDType.WIDE ? wideLCDHeight : LCDHeight;
 
             float maxFontSizeByWidth = maxWidth / size.Width;
             float maxFontSizeByHeight = maxHeight / size.Height;
@@ -613,6 +639,8 @@ namespace IngameScript
         private IMyTextPanel lcd1, lcd2, lcd3;
         private readonly double log2 = Math.Log(2);
         private const float lcdSizeCorrection = 0.15f;
+        private readonly string[] smallLCDs = new string[] { "SmallTextPanel", "SmallLCDPanel", "LargeTextPanel", "LargeLCDPanel" };
+        private readonly string[] wideLCDs = new string[] { "SmallLCDPanelWide", "LargeLCDPanelWide" };
         private const float wideLCDWidth = 52.75f - lcdSizeCorrection, wideLCDHeight = 17.75f - lcdSizeCorrection, LCDWidth = wideLCDWidth / 2, LCDHeight = wideLCDHeight;
 
         public void Main(string argument, UpdateType updateReason)
@@ -662,6 +690,14 @@ namespace IngameScript
                 Runtime.UpdateFrequency = UpdateFrequency.None;
                 return;
             }
+            
+            // function already checks if null on the inside and returns OTHER in that case
+            if (CheckLCD(lcd1) == LCDType.OTHER)
+                lcd1 = null;
+            if (CheckLCD(lcd2) == LCDType.OTHER)
+                lcd2 = null;
+            if (CheckLCD(lcd3) == LCDType.OTHER)
+                lcd3 = null;
 
             // if no errors in arguments, then we can keep the script updating
             Runtime.UpdateFrequency = UpdateFrequency.Update100;
