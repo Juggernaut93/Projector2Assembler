@@ -375,7 +375,9 @@ namespace IngameScript
                 assembler.GetQueue(items);
                 foreach (var i in items)
                 {
-                    AddCountToDict<string>(totalComponents, i.BlueprintId.ToString(), i.Amount);
+                    string key = i.BlueprintId.ToString();
+                    if (totalComponents.ContainsKey(key))
+                        totalComponents[key] += i.Amount.ToIntSafe();
                 }
             }
 
