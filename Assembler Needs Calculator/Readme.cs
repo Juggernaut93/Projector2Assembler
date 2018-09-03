@@ -57,7 +57,7 @@
  *          - fitOn2IfPossible determines if the script can try to fit the information about missing ores
  *              on the seconds LCD when the third LCD is not specified or invalid
  *          - alwaysShowAmmos, alwaysShowTools: if true, the first LCD will show ammos/tools on screen even
- *              when no assembler is assembling/disassembling them. Tools also include manual guns and H2/O2
+ *              when no assembler is assembling/disassembling them. Tools also include rifles and H2/O2
  *              bottles. If false, ammos/tools will only be shown if they are being assembled or disassembled.
  *              Setting alwaysShowTools to true may clutter the screen with too much info. Note that the other
  *              types of components are always listed, regardless of their presence in an assembler's queue.
