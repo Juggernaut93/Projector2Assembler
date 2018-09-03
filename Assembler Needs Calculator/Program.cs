@@ -502,9 +502,11 @@ namespace IngameScript
             int i = lines.Length - 1;
             while (string.IsNullOrWhiteSpace(lines[i]))
                 i--;
-            Size ret = new Size();
-            ret.Height = i + 1;
-            ret.Width = 0;
+            Size ret = new Size
+            {
+                Height = i + 1,
+                Width = 0
+            };
             foreach (var line in lines)
             {
                 int len = line.Length;
@@ -808,7 +810,10 @@ namespace IngameScript
                     {
                         //string na = string.Concat(Enumerable.Repeat(" ", (oreWidth - 1) / 2)) + "-" + string.Concat(Enumerable.Repeat(" ", oreWidth - 1 - (oreWidth - 1) / 2));
                         output += String.Format("{0}{1} {2}{3}{4}{3}{5}\n", okStr, oreName, amountStr, separator, na, endNa);
-                        var savedIron = amountPresent * conversionRates[Ores.Scrap] * (1f / (float)conversionRates[Ores.Iron]);
+                        var scrapConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Scrap] * (float)effectivenessMultiplier);
+                        var ironConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Iron] * (float)effectivenessMultiplier);
+                        // iron = scrap * min(1, 0.8*scrapconvrate*eff) / min(1, 0.8*ironconvrate*eff)
+                        var savedIron = amountPresent * scrapConvRate * (1f / ironConvRate);
                         scrapOutput = "\n*" + String.Format(scrapMetalMessage, FormatNumber(amountPresent, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Scrap], FormatNumber(savedIron, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Iron]) + "\n";
                     }
                 }
