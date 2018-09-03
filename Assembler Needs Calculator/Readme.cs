@@ -17,7 +17,8 @@
  *          - AssemblerGroupName is the name of the group of assemblers you want to show info about. If you
  *              don't specify a group, the script will show info about all the assemblers on your grid
  *          - LCDName1 is the name of the LCD that will show info about which components are currently in
- *              inventory and the ones your assemblers are producing (see HOW IT WORKS)
+ *              inventory and the ones your assemblers are producing (see HOW IT WORKS). The list of elements
+ *              shown can be configured (see ADDITIONAL CONFIGURATION)
  *          - LCDName2 is the name of the LCD that will show info about which ingots/refined ores are needed to
  *              build the components in your assemblers' queue (see HOW IT WORKS)
  *          - LCDName3 is the name of the LCD that will show info about which ores are needed to build the
@@ -55,6 +56,11 @@
  *              is set to Monospace font.
  *          - fitOn2IfPossible determines if the script can try to fit the information about missing ores
  *              on the seconds LCD when the third LCD is not specified or invalid
+ *          - alwaysShowAmmos, alwaysShowTools: if true, the first LCD will show ammos/tools on screen even
+ *              when no assembler is assembling/disassembling them. Tools also include manual guns and H2/O2
+ *              bottles. If false, ammos/tools will only be shown if they are being assembled or disassembled.
+ *              Setting alwaysShowTools to true may clutter the screen with too much info. Note that the other
+ *              types of components are always listed, regardless of their presence in an assembler's queue.
  *      It is also possible to easily change the language of the text shown by modifying the strings in the
  *      section "LOCALIZATION STRINGS". Be careful not to remove the text in curly braces: it serves as
  *      a placeholder to be later filled with numerical or text values.
