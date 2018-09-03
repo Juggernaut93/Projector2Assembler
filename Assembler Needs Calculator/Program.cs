@@ -31,6 +31,7 @@ namespace IngameScript
         private readonly bool assemblersFromSubgrids = false; // consider assemblers on subgrids (if no assembler group is specified)
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
+        private readonly bool alwaysShowAmmos = true, alwaysShowTools = false; // show ammos/tools even when no assembler are producing them (beware the screen clutter)
         /**********************************************/
         /************ END OF CONFIGURATION ************/
         /**********************************************/
@@ -54,6 +55,7 @@ namespace IngameScript
         private const string noAssembler = "No assemblers found";
         private readonly Dictionary<string, string> componentTranslation = new Dictionary<string, string>()
         {
+            // components
             ["BulletproofGlass"] = "Bulletproof Glass",
             ["Canvas"] = "Canvas",
             ["ComputerComponent"] = "Computer",
@@ -67,15 +69,38 @@ namespace IngameScript
             ["LargeTube"] = "Large Steel Tube",
             ["MedicalComponent"] = "Medical Components",
             ["MetalGrid"] = "Metal Grid",
-            ["MotorComponent"] = "Motor Component",
+            ["MotorComponent"] = "Motor",
             ["PowerCell"] = "Power Cell",
-            ["RadioCommunicationComponent"] = "Radio-Communication Components",
+            ["RadioCommunicationComponent"] = "Radio-communication Components",
             ["ReactorComponent"] = "Reactor Components",
             ["SmallTube"] = "Small Steel Tube",
             ["SolarCell"] = "Solar Cell",
             ["SteelPlate"] = "Steel Plate",
-            ["Superconductor"] = "Superconductor Component",
+            ["Superconductor"] = "Superconductor Conduits",
             ["ThrustComponent"] = "Thruster Components",
+            // ammos
+            ["NATO_5p56x45mmMagazine"] = "5.56x45mm NATO Magazine",
+            ["NATO_25x184mmMagazine"] = "25x184mm NATO ammo container",
+            ["Missile200mm"] = "200mm missile container",
+            // tools
+            ["OxygenBottle"] = "Oxygen Bottle",
+            ["HydrogenBottle"] = "Hydrogen Bottle",
+            ["AutomaticRifle"] = "Automatic Rifle",
+            ["RapidFireAutomaticRifle"] = "Rapid-Fire Automatic Rifle",
+            ["PreciseAutomaticRifle"] = "Precise Automatic Rifle",
+            ["UltimateAutomaticRifle"] = "Elite Automatic Rifle",
+            ["Welder"] = "Welder",
+            ["Welder2"] = "Enhanced Welder",
+            ["Welder3"] = "Proficient Welder",
+            ["Welder4"] = "Elite Welder",
+            ["AngleGrinder"] = "Grinder",
+            ["AngleGrinder2"] = "Enhanced Grinder",
+            ["AngleGrinder3"] = "Proficient Grinder",
+            ["AngleGrinder4"] = "Elite Grinder",
+            ["HandDrill"] = "Hand Drill",
+            ["HandDrill2"] = "Enhanced Hand Drill",
+            ["HandDrill3"] = "Proficient Hand Drill",
+            ["HandDrill4"] = "Elite Hand Drill",
         };
         private readonly Dictionary<Ingots, string> ingotTranslation = new Dictionary<Ingots, string>()
         {
@@ -126,6 +151,7 @@ namespace IngameScript
 
         private readonly Dictionary<string, Dictionary<Ingots, VRage.MyFixedPoint>> componentsToIngots = new Dictionary<string, Dictionary<Ingots, VRage.MyFixedPoint>>()
         {
+            // components
             ["BulletproofGlass"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Silicon] = 15 },
             ["Canvas"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 2, [Ingots.Silicon] = 35 },
             ["ComputerComponent"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.5"), [Ingots.Silicon] = FP("0.2") },
@@ -148,6 +174,137 @@ namespace IngameScript
             ["SteelPlate"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 21 },
             ["Superconductor"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 10, [Ingots.Gold] = 2 },
             ["ThrustComponent"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 30, [Ingots.Cobalt] = 10, [Ingots.Gold] = 1, [Ingots.Platinum] = FP("0.4") },
+            // ammos
+            ["NATO_5p56x45mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
+            ["NATO_25x184mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 40, [Ingots.Nickel] = 5, [Ingots.Magnesium] = 3 },
+            ["Missile200mm"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 55, [Ingots.Nickel] = 7, [Ingots.Magnesium] = FP("1.2"), [Ingots.Silicon] = FP("0.2"), [Ingots.Uranium] = FP("0.1"), [Ingots.Platinum] = FP("0.04") },
+            // tools
+            ["OxygenBottle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 80, [Ingots.Nickel] = 30, [Ingots.Silver] = 10 },
+            ["HydrogenBottle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 80, [Ingots.Nickel] = 30, [Ingots.Silver] = 10 },
+            ["AutomaticRifle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 1 },
+            ["RapidFireAutomaticRifle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 8 },
+            ["PreciseAutomaticRifle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 1, [Ingots.Cobalt] = 5 },
+            ["UltimateAutomaticRifle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 1, [Ingots.Platinum] = 4, [Ingots.Silver] = 6 },
+            ["Welder"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 5, [Ingots.Nickel] = 1, [Ingots.Cobalt] = FP("0.2") },
+            ["Welder2"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 5, [Ingots.Nickel] = 1, [Ingots.Cobalt] = FP("0.2"), [Ingots.Silicon] = 2 },
+            ["Welder3"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 5, [Ingots.Nickel] = 1, [Ingots.Cobalt] = FP("0.2"), [Ingots.Silver] = 2 },
+            ["Welder4"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 5, [Ingots.Nickel] = 1, [Ingots.Cobalt] = FP("0.2"), [Ingots.Platinum] = 2 },
+            ["AngleGrinder"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 1, [Ingots.Cobalt] = 1, [Ingots.Silicon] = 1 },
+            ["AngleGrinder2"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 1, [Ingots.Cobalt] = 2, [Ingots.Silicon] = 6 },
+            ["AngleGrinder3"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 1, [Ingots.Cobalt] = 1, [Ingots.Silicon] = 2, [Ingots.Silver] = 2 },
+            ["AngleGrinder4"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 3, [Ingots.Nickel] = 1, [Ingots.Cobalt] = 1, [Ingots.Silicon] = 2, [Ingots.Platinum] = 2 },
+            ["HandDrill"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 3 },
+            ["HandDrill2"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 5 },
+            ["HandDrill3"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 3, [Ingots.Silver] = 2 },
+            ["HandDrill4"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 3, [Ingots.Platinum] = 2 },
+        };
+
+        private readonly Dictionary<string, string> blueprintDefSubtypeToItemSubtype = new Dictionary<string, string>()
+        {
+            ["OxygenBottle"] = "OxygenBottle", //OxygenContainerObject
+            ["HydrogenBottle"] = "HydrogenBottle", //GasContainerObject
+            ["ConstructionComponent"] = "Construction", //Component
+            ["GirderComponent"] = "Girder", //Component
+            ["MetalGrid"] = "MetalGrid", //Component
+            ["InteriorPlate"] = "InteriorPlate", //Component
+            ["SteelPlate"] = "SteelPlate", //Component
+            ["SmallTube"] = "SmallTube", //Component
+            ["LargeTube"] = "LargeTube", //Component
+            ["MotorComponent"] = "Motor", //Component
+            ["Display"] = "Display", //Component
+            ["BulletproofGlass"] = "BulletproofGlass", //Component
+            ["ComputerComponent"] = "Computer", //Component
+            ["ReactorComponent"] = "Reactor", //Component
+            ["ThrustComponent"] = "Thrust", //Component
+            ["GravityGeneratorComponent"] = "GravityGenerator", //Component
+            ["MedicalComponent"] = "Medical", //Component
+            ["RadioCommunicationComponent"] = "RadioCommunication", //Component
+            ["DetectorComponent"] = "Detector", //Component
+            ["Canvas"] = "Canvas", //Component
+            ["ExplosivesComponent"] = "Explosives", //Component
+            ["SolarCell"] = "SolarCell", //Component
+            ["PowerCell"] = "PowerCell", //Component
+            ["AutomaticRifle"] = "AutomaticRifleItem", //PhysicalGunObject
+            ["RapidFireAutomaticRifle"] = "RapidFireAutomaticRifleItem", //PhysicalGunObject
+            ["PreciseAutomaticRifle"] = "PreciseAutomaticRifleItem", //PhysicalGunObject
+            ["UltimateAutomaticRifle"] = "UltimateAutomaticRifleItem", //PhysicalGunObject
+            ["Welder"] = "WelderItem", //PhysicalGunObject
+            ["Welder2"] = "Welder2Item", //PhysicalGunObject
+            ["Welder3"] = "Welder3Item", //PhysicalGunObject
+            ["Welder4"] = "Welder4Item", //PhysicalGunObject
+            ["AngleGrinder"] = "AngleGrinderItem", //PhysicalGunObject
+            ["AngleGrinder2"] = "AngleGrinder2Item", //PhysicalGunObject
+            ["AngleGrinder3"] = "AngleGrinder3Item", //PhysicalGunObject
+            ["AngleGrinder4"] = "AngleGrinder4Item", //PhysicalGunObject
+            ["HandDrill"] = "HandDrillItem", //PhysicalGunObject
+            ["HandDrill2"] = "HandDrill2Item", //PhysicalGunObject
+            ["HandDrill3"] = "HandDrill3Item", //PhysicalGunObject
+            ["HandDrill4"] = "HandDrill4Item", //PhysicalGunObject
+            ["NATO_5p56x45mmMagazine"] = "NATO_5p56x45mm", //AmmoMagazine
+            ["NATO_25x184mmMagazine"] = "NATO_25x184mm", //AmmoMagazine
+            ["Missile200mm"] = "Missile200mm", //AmmoMagazine
+            ["Superconductor"] = "Superconductor", //Component
+        };
+
+        private readonly Dictionary<string, string> getProductType = new Dictionary<string, string>()
+        {
+            ["OxygenBottle"] = "OxygenContainerObject",
+            ["HydrogenBottle"] = "GasContainerObject",
+            ["ConstructionComponent"] = "Component",
+            ["GirderComponent"] = "Component",
+            ["MetalGrid"] = "Component",
+            ["InteriorPlate"] = "Component",
+            ["SteelPlate"] = "Component",
+            ["SmallTube"] = "Component",
+            ["LargeTube"] = "Component",
+            ["MotorComponent"] = "Component",
+            ["Display"] = "Component",
+            ["BulletproofGlass"] = "Component",
+            ["ComputerComponent"] = "Component",
+            ["ReactorComponent"] = "Component",
+            ["ThrustComponent"] = "Component",
+            ["GravityGeneratorComponent"] = "Component",
+            ["MedicalComponent"] = "Component",
+            ["RadioCommunicationComponent"] = "Component",
+            ["DetectorComponent"] = "Component",
+            ["Canvas"] = "Component",
+            ["ExplosivesComponent"] = "Component",
+            ["SolarCell"] = "Component",
+            ["PowerCell"] = "Component",
+            ["AutomaticRifle"] = "PhysicalGunObject",
+            ["RapidFireAutomaticRifle"] = "PhysicalGunObject",
+            ["PreciseAutomaticRifle"] = "PhysicalGunObject",
+            ["UltimateAutomaticRifle"] = "PhysicalGunObject",
+            ["Welder"] = "PhysicalGunObject",
+            ["Welder2"] = "PhysicalGunObject",
+            ["Welder3"] = "PhysicalGunObject",
+            ["Welder4"] = "PhysicalGunObject",
+            ["AngleGrinder"] = "PhysicalGunObject",
+            ["AngleGrinder2"] = "PhysicalGunObject",
+            ["AngleGrinder3"] = "PhysicalGunObject",
+            ["AngleGrinder4"] = "PhysicalGunObject",
+            ["HandDrill"] = "PhysicalGunObject",
+            ["HandDrill2"] = "PhysicalGunObject",
+            ["HandDrill3"] = "PhysicalGunObject",
+            ["HandDrill4"] = "PhysicalGunObject",
+            ["NATO_5p56x45mmMagazine"] = "AmmoMagazine",
+            ["NATO_25x184mmMagazine"] = "AmmoMagazine",
+            ["Missile200mm"] = "AmmoMagazine",
+            ["Superconductor"] = "Component",
+        };
+
+        private readonly string[] componentPrefixes = new string[] {
+            "Component",
+            "AmmoMagazine",
+            "PhysicalGunObject",
+            "OxygenContainerObject",
+            "GasContainerObject"
+        };
+
+        private readonly string[] toolsPrefixes = new string[] {
+            "PhysicalGunObject",
+            "OxygenContainerObject",
+            "GasContainerObject"
         };
 
         private readonly Dictionary<Ores, Ingots> oreToIngot = new Dictionary<Ores, Ingots>()
@@ -365,9 +522,11 @@ namespace IngameScript
             Dictionary<string, int> totalComponents = new Dictionary<string, int>();
 
             // we first initialize the dictionary to have ALL components, so we show on screen all components
-            foreach (var x in componentTranslation.Keys)
+            // now considering alwaysShowAmmos and alwaysShowTools
+            foreach (var x in getProductType)
             {
-                totalComponents["MyObjectBuilder_BlueprintDefinition/" + x] = 0;
+                if (x.Value == "Component" || (x.Value == "AmmoMagazine" && alwaysShowAmmos) || (toolsPrefixes.Contains(x.Value) && alwaysShowTools))
+                    totalComponents["MyObjectBuilder_BlueprintDefinition/" + x.Key] = 0;
             }
 
             foreach (var assembler in assemblers)
@@ -695,15 +854,16 @@ namespace IngameScript
                         var itemList = b.GetInventory(i).GetItems();
                         foreach (var item in itemList)
                         {
-                            if (item.Content.TypeId.ToString().Equals("MyObjectBuilder_Component"))
+                            var type = item.Content.TypeId.ToString();
+                            if (componentPrefixes.Contains(type.Replace("MyObjectBuilder_", "")))
                             {
                                 AddCountToDict(componentAmounts, item.Content.SubtypeId.ToString(), item.Amount);
                             }
-                            else if (item.Content.TypeId.ToString().Equals("MyObjectBuilder_Ingot"))
+                            else if (type.Equals("MyObjectBuilder_Ingot"))
                             {
                                 AddCountToDict(ingotAmounts, (Ingots)Enum.Parse(typeof(Ingots), item.Content.SubtypeId.ToString()), item.Amount);
                             }
-                            else if (item.Content.TypeId.ToString().Equals("MyObjectBuilder_Ore"))
+                            else if (type.Equals("MyObjectBuilder_Ore"))
                             {
                                 AddCountToDict(oreAmounts, (Ores)Enum.Parse(typeof(Ores), item.Content.SubtypeId.ToString()), item.Amount);
                             }
@@ -860,7 +1020,7 @@ namespace IngameScript
             foreach (var component in compList)
             {
                 string subTypeId = component.Key.Replace("MyObjectBuilder_BlueprintDefinition/", "");
-                var amountPresent = GetCountFromDic(componentAmounts, subTypeId.Replace("Component", ""));
+                var amountPresent = GetCountFromDic(componentAmounts, blueprintDefSubtypeToItemSubtype[subTypeId]);
                 string componentName = componentTranslation[subTypeId];
                 //string separator = "/";
                 string amountStr = amountPresent.ToString();
