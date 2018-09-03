@@ -32,6 +32,7 @@ namespace IngameScript
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
         private readonly bool alwaysShowAmmos = true, alwaysShowTools = false; // show ammos/tools even when no assembler are producing them (beware the screen clutter)
+        private readonly bool showAllIngotsOres = true; // show all ingots/ores, even if they are not used to build any components shown on the first LCD (scrap will still be ignored if not in inventory)
         /**********************************************/
         /************ END OF CONFIGURATION ************/
         /**********************************************/
@@ -119,7 +120,7 @@ namespace IngameScript
         {
             [Ores.Cobalt] = "Cobalt Ore",
             [Ores.Gold] = "Gold Ore",
-            [Ores.Ice] = "Ice Ore",
+            [Ores.Ice] = "Ice",
             [Ores.Iron] = "Iron Ore",
             [Ores.Magnesium] = "Magnesium Ore",
             [Ores.Nickel] = "Nickel Ore",
@@ -609,6 +610,12 @@ namespace IngameScript
         {
             Dictionary<Ingots, VRage.MyFixedPoint> ingotsNeeded = new Dictionary<Ingots, VRage.MyFixedPoint>();
 
+            if (showAllIngotsOres)
+            {
+                foreach (Ingots ing in Enum.GetValues(typeof(Ingots)))
+                    ingotsNeeded[ing] = 0;
+            }
+
             foreach (var pair in components)
             {
                 foreach (var ing in componentsToIngots[StripDef(pair.Key)])
@@ -625,6 +632,12 @@ namespace IngameScript
         private List<KeyValuePair<Ores, VRage.MyFixedPoint>> GetTotalOres(List<KeyValuePair<Ingots, VRage.MyFixedPoint>> ingots)
         {
             Dictionary<Ores, VRage.MyFixedPoint> oresNeeded = new Dictionary<Ores, VRage.MyFixedPoint>();
+
+            if (showAllIngotsOres)
+            {
+                foreach (Ores ing in Enum.GetValues(typeof(Ores)))
+                    oresNeeded[ing] = 0;
+            }
 
             foreach (var pair in ingots)
             {
@@ -969,22 +982,26 @@ namespace IngameScript
                     na = new string(' ', (oreWidth - 1) / 2) + "-" + new string(' ', oreWidth - 1 - (oreWidth - 1) / 2);
                     endNa = new string(' ', oreWidth);
                 }
-                if (ores.Key == Ores.Scrap)
+                switch(ores.Key)
                 {
-                    if (amountPresent > 0) // if 0 scrap, ignore row
-                    {
-                        //string na = string.Concat(Enumerable.Repeat(" ", (oreWidth - 1) / 2)) + "-" + string.Concat(Enumerable.Repeat(" ", oreWidth - 1 - (oreWidth - 1) / 2));
-                        output += String.Format("{0}{1} {2}{3}{4}{3}{5}\n", okStr, oreName, amountStr, separator, na, endNa);
-                        var scrapConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Scrap] * (float)effectivenessMultiplier);
-                        var ironConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Iron] * (float)effectivenessMultiplier);
-                        // iron = scrap * min(1, 0.8*scrapconvrate*eff) / min(1, 0.8*ironconvrate*eff)
-                        var savedIron = amountPresent * scrapConvRate * (1f / ironConvRate);
-                        scrapOutput = "\n*" + String.Format(scrapMetalMessage, FormatNumber(amountPresent, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Scrap], FormatNumber(savedIron, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Iron]) + "\n";
-                    }
-                }
-                else
-                {
-                    output += String.Format("{0}{1} {2}{3}{4}{3}{5}\n", (missing > 0 ? warnStr : okStr), oreName, amountStr, separator, neededStr, missingStr);
+                    case Ores.Scrap:
+                        if (amountPresent > 0) // if 0 scrap, ignore row
+                        {
+                            //string na = string.Concat(Enumerable.Repeat(" ", (oreWidth - 1) / 2)) + "-" + string.Concat(Enumerable.Repeat(" ", oreWidth - 1 - (oreWidth - 1) / 2));
+                            output += String.Format("{0}{1} {2}{3}{4}{3}{5}\n", okStr, oreName, amountStr, separator, na, endNa);
+                            var scrapConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Scrap] * (float)effectivenessMultiplier);
+                            var ironConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Iron] * (float)effectivenessMultiplier);
+                            // iron = scrap * min(1, 0.8*scrapconvrate*eff) / min(1, 0.8*ironconvrate*eff)
+                            var savedIron = amountPresent * scrapConvRate * (1f / ironConvRate);
+                            scrapOutput = "\n*" + String.Format(scrapMetalMessage, FormatNumber(amountPresent, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Scrap], FormatNumber(savedIron, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Iron]) + "\n";
+                        }
+                        break;
+                    case Ores.Ice: // if there is Ice, showAllIngotsOres must necessarily be true
+                        output += String.Format("{0}{1} {2}{3}{4}{3}{5}\n", (missing > 0 ? warnStr : okStr), oreName, amountStr, separator, na, endNa);
+                        break;
+                    default:
+                        output += String.Format("{0}{1} {2}{3}{4}{3}{5}\n", (missing > 0 ? warnStr : okStr), oreName, amountStr, separator, neededStr, missingStr);
+                        break;
                 }
             }
 
