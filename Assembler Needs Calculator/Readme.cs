@@ -74,10 +74,12 @@
  *          the available ores are insufficient (they cannot produce enough ingots to build all the components).
  *      - COMPONENT LCD CONTENT:
  *          - AVAILABLE column: the amount of each component that is currently in inventory
- *          - IN PRODUCTION column: the amount of each component that is currently in production
+ *          - IN PRODUCTION column: the amount of each component that is currently in production (negative
+ *              means disassembling)
  *      - INGOT LCD CONTENT:
  *          - AVAILABLE column: the amount of each ingot type that is currently in inventory
  *          - NEEDED column: the amount of ingots needed to build the components currently in production
+ *              (negative means ingots will be available from disassembling)
  *          - MISSING column: the difference between NEEDED and AVAILABLE. Not shown if 0. It represents how
  *              many additional ingots have to be produced to build the components in the queue
  *      - ORE LCD CONTENT:
