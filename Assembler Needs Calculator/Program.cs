@@ -419,19 +419,19 @@ namespace IngameScript
             int wholeDigits = GetWholeDigits(amt);
             string multiplier = " ";
 
-            if (amt.ToString().Length > maxWidth - 1 && amt >= 1000)
+            if (amt.ToString().Length > maxWidth - 1 && Math.Abs((float)amt) >= 1000)
             {
                 multiplier = thousands;
                 amt = amt * (1 / 1000f);
                 wholeDigits = GetWholeDigits(amt);
 
-                if (amt.ToString().Length > maxWidth - 1 && amt >= 1000)
+                if (amt.ToString().Length > maxWidth - 1 && Math.Abs((float)amt) >= 1000)
                 {
                     multiplier = millions;
                     amt = amt * (1 / 1000f);
                     wholeDigits = GetWholeDigits(amt);
 
-                    if (amt.ToString().Length > maxWidth - 1 && amt >= 1000)
+                    if (amt.ToString().Length > maxWidth - 1 && Math.Abs((float)amt) >= 1000)
                     {
                         multiplier = billions;
                         amt = amt * (1 / 1000f);
@@ -888,7 +888,7 @@ namespace IngameScript
                     okStr = "   ";
                 }
 
-                output += String.Format("{0}{1} {2}|{3}\n", missingOresForComponent ? warnStr : okStr, componentName, amountStr, neededStr);
+                output += String.Format("{0}{1} {2}|{3}\n", (missingOresForComponent || amountPresent < -component.Value) ? warnStr : okStr, componentName, amountStr, neededStr);
             }
             if (lcd1 != null)
             {
