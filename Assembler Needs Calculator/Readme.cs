@@ -61,6 +61,10 @@
  *              bottles. If false, ammos/tools will only be shown if they are being assembled or disassembled.
  *              Setting alwaysShowTools to true may clutter the screen with too much info. Note that the other
  *              types of components are always listed, regardless of their presence in an assembler's queue.
+ *          - showAllIngotsOres will tell the script to show every type of ingot and ore available in the
+ *              game even if it isn't needed to build objects in the assembler. Useful for monitoring purposes.
+ *              Note that scrap metal will still be ignored if it's not present in inventory, to avoid
+ *              unnecessary clutter.
  *      It is also possible to easily change the language of the text shown by modifying the strings in the
  *      section "LOCALIZATION STRINGS". Be careful not to remove the text in curly braces: it serves as
  *      a placeholder to be later filled with numerical or text values.
@@ -92,7 +96,9 @@
  *              many additional ingots have to be produced to build the components in the queue
  *      - ORE LCD CONTENT:
  *          - AVAILABLE column: the amount of each ore that is currently in inventory
- *          - NEEDED column: the amount of ores needed to build the MISSING ingots
+ *          - NEEDED column: the amount of ores needed to build the MISSING ingots. A "-" sign means this ore
+ *              is not used to build materials in the assembler (e.g. Ice) or a NEEDED value doesn't make
+ *              sense (e.g. Scrap Metal)
  *          - MISSING column: the difference between NEEDED and AVAILABLE. Not shown if 0. It represents how
  *          many additional ores have to be mined to build the missing ingots
  *          The panel will also show how much iron ore the available scrap metal (if any) can save you and
