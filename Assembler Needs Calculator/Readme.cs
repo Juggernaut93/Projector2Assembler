@@ -70,8 +70,10 @@
  *          before, in this case the content of the third LCD can be shown on the second one, if the third LCD
  *          is not available and the second one is. Each LCD will show the name of the assembler group (if
  *          applicable) and the number of assemblers considered.
- *          Also, each LCD will highlight with a ">>" the missing ingots and ores and the components for which
- *          the available ores are insufficient (they cannot produce enough ingots to build all the components).
+ *          Also, each LCD will highlight with a ">>" the missing ingots and ores, the components for which
+ *          the available ores are insufficient (they cannot produce enough ingots to build all the components)
+ *          and the components in disassembling queues where the disassembling amount is higher than the
+ *          amount in inventory (the assembler will get stuck).
  *      - COMPONENT LCD CONTENT:
  *          - AVAILABLE column: the amount of each component that is currently in inventory
  *          - IN PRODUCTION column: the amount of each component that is currently in production (negative
