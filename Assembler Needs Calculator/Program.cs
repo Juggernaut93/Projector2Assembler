@@ -55,6 +55,7 @@ namespace IngameScript
         private readonly Dictionary<string, string> componentTranslation = new Dictionary<string, string>()
         {
             ["BulletproofGlass"] = "Bulletproof Glass",
+            ["Canvas"] = "Canvas",
             ["ComputerComponent"] = "Computer",
             ["ConstructionComponent"] = "Construction Component",
             ["DetectorComponent"] = "Detector Components",
@@ -126,6 +127,7 @@ namespace IngameScript
         private readonly Dictionary<string, Dictionary<Ingots, VRage.MyFixedPoint>> componentsToIngots = new Dictionary<string, Dictionary<Ingots, VRage.MyFixedPoint>>()
         {
             ["BulletproofGlass"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Silicon] = 15 },
+            ["Canvas"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 2, [Ingots.Silicon] = 35 },
             ["ComputerComponent"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.5"), [Ingots.Silicon] = FP("0.2") },
             ["ConstructionComponent"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 10 },
             ["DetectorComponent"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 15, [Ingots.Nickel] = 5 },
@@ -376,7 +378,10 @@ namespace IngameScript
                 {
                     string key = i.BlueprintId.ToString();
                     if (totalComponents.ContainsKey(key))
-                        totalComponents[key] += i.Amount.ToIntSafe();
+                        if (assembler.Mode == MyAssemblerMode.Assembly)
+                            totalComponents[key] += i.Amount.ToIntSafe();
+                        else
+                            totalComponents[key] -= i.Amount.ToIntSafe(); // disassembling = reclaiming resources
                 }
             }
 
