@@ -536,11 +536,11 @@ namespace IngameScript
                 foreach (var i in items)
                 {
                     string key = i.BlueprintId.ToString();
-                    if (totalComponents.ContainsKey(key))
+                    if (getProductType.ContainsKey(StripDef(key)))
                         if (assembler.Mode == MyAssemblerMode.Assembly)
-                            totalComponents[key] += i.Amount.ToIntSafe();
+                            AddCountToDict(totalComponents, key, i.Amount);
                         else
-                            totalComponents[key] -= i.Amount.ToIntSafe(); // disassembling = reclaiming resources
+                            AddCountToDict(totalComponents, key, -i.Amount); // disassembling = reclaiming resources
                 }
             }
 
