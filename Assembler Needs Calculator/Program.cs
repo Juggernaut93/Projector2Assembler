@@ -33,6 +33,7 @@ namespace IngameScript
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
         private readonly bool alwaysShowAmmos = true, alwaysShowTools = false; // show ammos/tools even when no assembler are producing them (beware the screen clutter)
         private readonly bool showAllIngotsOres = true; // show all ingots/ores, even if they are not used to build any components shown on the first LCD (scrap will still be ignored if not in inventory)
+        private readonly bool onlyEnabledAssemblers = false; // if true, only enabled assemblers will be considered (if no assembler group is specified)
         /**********************************************/
         /************ END OF CONFIGURATION ************/
         /**********************************************/
@@ -823,7 +824,7 @@ namespace IngameScript
             }
             else
             {
-                GridTerminalSystem.GetBlocksOfType<IMyAssembler>(assemblers, block => (block.CubeGrid == Me.CubeGrid || assemblersFromSubgrids));
+                GridTerminalSystem.GetBlocksOfType<IMyAssembler>(assemblers, block => (block.CubeGrid == Me.CubeGrid || assemblersFromSubgrids) && (block.Enabled || !onlyEnabledAssemblers));
                 fromGroup = false;
             }
             if (assemblers.Count == 0)
@@ -839,7 +840,7 @@ namespace IngameScript
                 GridTerminalSystem.GetBlocksOfType<IMyRefinery>(refineries, refinery => (refinery.CubeGrid == Me.CubeGrid || refineriesFromSubgrids) && refinery.Enabled);
                 if (refineries.Count == 0)
                 {
-                    effectivenessMultiplier = 1; // no refineris found; use default
+                    effectivenessMultiplier = 1; // no active refineries found; use default
                 }
                 else
                 {

@@ -729,7 +729,7 @@ namespace IngameScript
                 GridTerminalSystem.GetBlocksOfType<IMyRefinery>(refineries, refinery => (refinery.CubeGrid == Me.CubeGrid || refineriesFromSubgrids) && refinery.Enabled);
                 if (refineries.Count == 0)
                 {
-                    effectivenessMultiplier = 1; // no refineris found; use default
+                    effectivenessMultiplier = 1; // no active refineries found; use default
                 }
                 else
                 {
