@@ -49,12 +49,15 @@ namespace IngameScript
         private const string lcd3Title = "Ores: available | needed | missing";
         private const string monospaceFontName = "Monospace";
         private const string effectivenessString = "Effectiveness:"; // the text shown in terminal which says the current effectiveness (= yield bonus) of the selected refinery
-        private const string refineryMessage = "Calculations done using ~{0:F2}% effectiveness\n({1}{2} ports with yield modules) ({3})";
+        private const string refineryMessage = "Math done with ~{0:F2}% refinery effectiveness\n({1}{2} ports with yield modules) ({3})";
         private const string refineryMessageCauseUser = "user input";
         private const string refineryMessageCauseAvg = "grid average";
         private const string scrapMetalMessage = "{0} {1} can be used to save {2} {3}";
         private const string thousands = "k", millions = "M", billions = "G";
         private const string noAssembler = "No assemblers found";
+        private const string arcFurnaceEffUsed = "^Arc Furnace conversion rate";
+        private const string noRefineryFound = " (no refinery found)";
+        private const string betterYield = " (better yield)";
         private readonly Dictionary<string, string> componentTranslation = new Dictionary<string, string>()
         {
             // components
@@ -309,6 +312,8 @@ namespace IngameScript
             "GasContainerObject"
         };
 
+        private readonly Ores[] arcFurnaceOres = new Ores[] { Ores.Iron, Ores.Nickel, Ores.Cobalt, Ores.Scrap };
+
         private readonly Dictionary<Ores, Ingots> oreToIngot = new Dictionary<Ores, Ingots>()
         {
             [Ores.Cobalt] = Ingots.Cobalt,
@@ -343,7 +348,7 @@ namespace IngameScript
         {
             [Ores.Cobalt] = FP("0.3"),
             [Ores.Gold] = FP("0.01"),
-            //[Ores.Ice] = null,
+            [Ores.Ice] = 0, // ice conversion rate is not refined in refinery or arc furnace
             [Ores.Iron] = FP("0.7"),
             [Ores.Magnesium] = FP("0.007"),
             [Ores.Nickel] = FP("0.4"),
@@ -392,6 +397,12 @@ namespace IngameScript
             {
                 if (name.Length > maxOreLength)
                     maxOreLength = name.Length;
+            }
+            // account for possible '^' character for ores that can be refined in an Arc Furnace
+            foreach (var ore in arcFurnaceOres)
+            {
+                if (oreTranslation[ore].Length + 1 > maxOreLength)
+                    maxOreLength = oreTranslation[ore].Length + 1;
             }
             if (oreTranslation[Ores.Scrap].Length == maxOreLength)
             {
@@ -634,24 +645,51 @@ namespace IngameScript
         {
             Dictionary<Ores, VRage.MyFixedPoint> oresNeeded = new Dictionary<Ores, VRage.MyFixedPoint>();
 
-            if (showAllIngotsOres)
+            foreach (Ores ore in Enum.GetValues(typeof(Ores)))
             {
-                foreach (Ores ing in Enum.GetValues(typeof(Ores)))
-                    oresNeeded[ing] = 0;
+                if (showAllIngotsOres)
+                {
+                    oresNeeded[ore] = 0;
+                }
+                conversionData[ore] = GetConversionData(ore);
             }
+
 
             foreach (var pair in ingots)
             {
                 foreach (var ore in ingotToOres[pair.Key])
                 {
-                    // conversion rate cannot be greater than 1
-                    AddCountToDict<Ores>(oresNeeded, ore, pair.Value * (1 / Math.Min(1f, 0.8f * (float)conversionRates[ore] * (float)effectivenessMultiplier)));
+                    AddCountToDict<Ores>(oresNeeded, ore, pair.Value * (1 / conversionData[ore].conversionRate));
                 }
             }
 
             var oreList = oresNeeded.ToList();
             oreList.Sort((x, y) => string.Compare(oreTranslation[x.Key], oreTranslation[y.Key]));
             return oreList;
+        }
+
+        private struct ConversionData
+        {
+            public float conversionRate;
+            public bool arcFurnace;
+        }
+
+        private ConversionData GetConversionData(Ores ore)
+        {
+            var refConvRate = Math.Min(1f, 0.8f * (float)conversionRates[ore] * (float)effectivenessMultiplier);
+            var ret = new ConversionData { conversionRate = refConvRate, arcFurnace = false };
+            if (arcFurnaceOres.Contains(ore))
+            {
+                var arcConvRate = Math.Min(1f, 0.9f * (float)conversionRates[ore]); // Arc Furnace has no yield ports
+                // if there are both refineries and arc furnace, or there is neither, we prefer the best yield
+                // or we prefer arc furnace rate when there is one but no refinery
+                if ((arcConvRate > refConvRate && (atLeastOneArcFurnace == atLeastOneRefinery)) || (atLeastOneArcFurnace && !atLeastOneRefinery))
+                {
+                    ret.conversionRate = arcConvRate;
+                    ret.arcFurnace = true;
+                }
+            }
+            return ret;
         }
 
         private double GetRefineryEffectiveness(IMyRefinery r)
@@ -757,6 +795,9 @@ namespace IngameScript
         private readonly string[] smallLCDs = new string[] { "SmallTextPanel", "SmallLCDPanel", "LargeTextPanel", "LargeLCDPanel" };
         private readonly string[] wideLCDs = new string[] { "SmallLCDPanelWide", "LargeLCDPanelWide" };
         private const float wideLCDWidth = 52.75f - lcdSizeCorrection, wideLCDHeight = 17.75f - lcdSizeCorrection, LCDWidth = wideLCDWidth / 2, LCDHeight = wideLCDHeight;
+        //private bool arcFurnaceWithNoRefinery = false;
+        private bool atLeastOneRefinery = false, atLeastOneArcFurnace = false;
+        private Dictionary<Ores, ConversionData> conversionData = new Dictionary<Ores, ConversionData>();
 
         public void Main(string argument, UpdateType updateReason)
         {
@@ -834,10 +875,21 @@ namespace IngameScript
                 return;
             }
 
+            List<IMyRefinery> allRefineries = new List<IMyRefinery>();
+            GridTerminalSystem.GetBlocksOfType<IMyRefinery>(allRefineries, refinery => (refinery.CubeGrid == Me.CubeGrid || refineriesFromSubgrids) && refinery.Enabled);
+            List<IMyRefinery> refineries = new List<IMyRefinery>();
+            List<IMyRefinery> arcFurnaces = new List<IMyRefinery>();
+            foreach (var x in allRefineries)
+                if (x.BlockDefinition.SubtypeName == "Blast Furnace")
+                    arcFurnaces.Add(x);
+                else
+                    refineries.Add(x);
+
+            atLeastOneRefinery = refineries.Count > 0;
+            atLeastOneArcFurnace = arcFurnaces.Count > 0;
+
             if (averageEffectivenesses) // dynamically update average refinery efficiency
             {
-                List<IMyRefinery> refineries = new List<IMyRefinery>();
-                GridTerminalSystem.GetBlocksOfType<IMyRefinery>(refineries, refinery => (refinery.CubeGrid == Me.CubeGrid || refineriesFromSubgrids) && refinery.Enabled);
                 if (refineries.Count == 0)
                 {
                     effectivenessMultiplier = 1; // no active refineries found; use default
@@ -955,11 +1007,17 @@ namespace IngameScript
             //decimalFmt = (oreDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", oreDecimals));
             decimalFmt = (oreDecimals > 0 ? "." : "") + new string('0', oreDecimals);
             string scrapOutput = "";
+            bool atLeastOneOrePrefersArc = false;
             for (int i = 0; i < oresList.Count; i++)
             {
                 var ores = oresList[i];
                 var amountPresent = GetCountFromDic(oreAmounts, ores.Key);
-                string oreName = oreTranslation[ores.Key] + (ores.Key == Ores.Scrap ? "*" : "");
+                string oreName = oreTranslation[ores.Key] + (ores.Key == Ores.Scrap ? "*" : ""); ;
+                if (conversionData[ores.Key].arcFurnace)
+                {
+                    oreName += "^";
+                    atLeastOneOrePrefersArc = true;
+                }
                 string separator = " | ";
                 string normalFmt = "{0:0" + decimalFmt + "}";
                 string amountStr = string.Format(normalFmt, (decimal)amountPresent);
@@ -983,17 +1041,14 @@ namespace IngameScript
                     na = new string(' ', (oreWidth - 1) / 2) + "-" + new string(' ', oreWidth - 1 - (oreWidth - 1) / 2);
                     endNa = new string(' ', oreWidth);
                 }
-                switch(ores.Key)
+                switch (ores.Key)
                 {
                     case Ores.Scrap:
                         if (amountPresent > 0) // if 0 scrap, ignore row
                         {
                             //string na = string.Concat(Enumerable.Repeat(" ", (oreWidth - 1) / 2)) + "-" + string.Concat(Enumerable.Repeat(" ", oreWidth - 1 - (oreWidth - 1) / 2));
                             output += String.Format("{0}{1} {2}{3}{4}{3}{5}\n", okStr, oreName, amountStr, separator, na, endNa);
-                            var scrapConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Scrap] * (float)effectivenessMultiplier);
-                            var ironConvRate = Math.Min(1f, 0.8f * (float)conversionRates[Ores.Iron] * (float)effectivenessMultiplier);
-                            // iron = scrap * min(1, 0.8*scrapconvrate*eff) / min(1, 0.8*ironconvrate*eff)
-                            var savedIron = amountPresent * scrapConvRate * (1f / ironConvRate);
+                            var savedIron = amountPresent * conversionData[Ores.Scrap].conversionRate * (1f / conversionData[Ores.Iron].conversionRate);
                             scrapOutput = "\n*" + String.Format(scrapMetalMessage, FormatNumber(amountPresent, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Scrap], FormatNumber(savedIron, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Iron]) + "\n";
                         }
                         break;
@@ -1007,6 +1062,8 @@ namespace IngameScript
             }
 
             output += scrapOutput;
+            if (atLeastOneOrePrefersArc)
+                output += (scrapOutput == "" ? "\n" : "") + arcFurnaceEffUsed + (refineries.Count == 0 ? noRefineryFound : betterYield) + "\n";
 
             double avgPorts = 8 * Math.Log(effectivenessMultiplier) / log2;
             string avgPortsStr;

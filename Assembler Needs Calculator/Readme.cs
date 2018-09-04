@@ -27,7 +27,8 @@
  *          - yieldPorts is an integer between 0 and 8 and specifies how many ports of your refineries should
  *              be considered as covered by a Yield Module. This value will affect calculations regarding how
  *              much of each ore is needed for your blueprint. If you don't specify yieldPorts, the script
- *              will use the average effectiveness of the ENABLED refineries on your grid
+ *              will use the average effectiveness of the ENABLED refineries on your grid. Note that the script
+ *              will also account for available Arc Furnaces and will show the better option
  *      - >>> IMPORTANT <<<
  *        You HAVE to set the ASSEMBLER_EFFICIENCY variable at the top of the script according to your world
  *        settings: if you have set the assembler efficiency to realistic, set the variable to 1; if you have set
@@ -106,6 +107,6 @@
  *          The panel will also show how much iron ore the available scrap metal (if any) can save you and
  *          the refinery effectiveness percentage used to compute the needed ores (together with the equivalent
  *          amount of ports covered by yield modules - exact if specified, averaged if the effectiveness has
- *          been averaged).
- *            
+ *          been averaged). Moreover, ores that can be refined at higher yield on an available Arc Furnace
+ *          will be marked with a '^'.
  */
