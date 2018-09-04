@@ -28,7 +28,8 @@
  *          - LCDName2 is the name of the LCD that will show info about which ingots/refined ores are needed to
  *              build the blueprint (see HOW IT WORKS)
  *          - LCDName3 is the name of the LCD that will show info about which ores are needed to build the
- *              blueprint (see HOW IT WORKS)
+ *              blueprint (see HOW IT WORKS). If no valid third LCD is specified, the script will try to fit the
+ *              info on the second LCD (if specified) (see ADDITIONAL CONFIGURATION)
  *          - lightArmor is true (default) or false and tells the script to assume all the armor blocks listed by
  *              the projector are respectively Light Armor Blocks or Heavy Armor Blocks
  *          - yieldPorts is an integer between 0 and 8 and specifies how many ports of your refineries should
@@ -60,6 +61,8 @@
  *              average effectiveness
  *          - autoResizeText specifies if text should be resized to fit the LCD screen. Only works if the LCD
  *              is set to Monospace font.
+ *          - fitOn2IfPossible determines if the script can try to fit the information about missing ores
+ *              on the seconds LCD when the third LCD is not specified or invalid
  *      It is also possible to easily change the language of the text shown by modifying the strings in the
  *      section "LOCALIZATION STRINGS". Be careful not to remove the text in curly braces: it serves as
  *      a placeholder to be later filled with numerical or text values.
@@ -77,7 +80,9 @@
  *          refinery effectiveness at transforming ores to ingots (or the one you have manually specified with
  *          the yieldPorts parameter).
  *      - The computed info are then shown on the available LCDs. If one of the LCDs is not found or is not
- *          specified, the script will simply ignore it. Each LCD will show the name of the chosen projector.
+ *          specified, the script will simply ignore it, except for when fitOn2IfPossible is true: as explained
+ *          before, in this case the content of the third LCD can be shown on the second one, if the third LCD
+ *          is not available and the second one is. Each LCD will show the name of the chosen projector.
  *          Also, each LCD will highlight with a ">>" the missing materials.
  *      - COMPONENT LCD CONTENT:
  *          - AVAILABLE column: the amount of each component that is currently in inventory
