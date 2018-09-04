@@ -65,6 +65,8 @@
  *              game even if it isn't needed to build objects in the assembler. Useful for monitoring purposes.
  *              Note that scrap metal will still be ignored if it's not present in inventory, to avoid
  *              unnecessary clutter.
+ *          - onlyEnabledAssemblers: if true, only enabled assemblers will be considered (if no assembler
+ *              group is specified)
  *      It is also possible to easily change the language of the text shown by modifying the strings in the
  *      section "LOCALIZATION STRINGS". Be careful not to remove the text in curly braces: it serves as
  *      a placeholder to be later filled with numerical or text values.
