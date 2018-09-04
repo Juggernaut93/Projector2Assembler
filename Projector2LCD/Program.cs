@@ -29,6 +29,7 @@ namespace IngameScript
         private readonly bool inventoryFromSubgrids = false; // consider inventories on subgrids when computing available materials
         private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
+        private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
         /**********************************************/
         /************ END OF CONFIGURATION ************/
         /**********************************************/
@@ -915,7 +916,14 @@ namespace IngameScript
             var oresList = GetTotalOres(missingIngots);
             var oresTotalNeeded = GetTotalOres(ingotsTotalNeeded);
             //List<KeyValuePair<Ores, VRage.MyFixedPoint>> missingOres = new List<KeyValuePair<Ores, VRage.MyFixedPoint>>();
-            output = localProjectorName + "\n" + lcd3Title.ToUpper() + "\n\n";
+            if (lcd3 == null && fitOn2IfPossible)
+            {
+                output = "\n" + lcd3Title.ToUpper() + "\n\n";
+            }
+            else
+            {
+                output = localProjectorName + "\n" + lcd3Title.ToUpper() + "\n\n";
+            }
             //decimalFmt = (oreDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", oreDecimals));
             decimalFmt = (oreDecimals > 0 ? "." : "") + new string('0', oreDecimals);
             string scrapOutput = "";
@@ -940,7 +948,7 @@ namespace IngameScript
                 string missingStr = missing > 0 ? string.Format(normalFmt, (decimal)missing) : "";
                 string warnStr = ">>", okStr = "";
                 string na = "-", endNa = "";
-                if (lcd3 != null && lcd3.Font.Equals(monospaceFontName))
+                if ((lcd3 != null && lcd3.Font.Equals(monospaceFontName)) || (lcd3 == null && fitOn2IfPossible && lcd2 != null && lcd2.Font.Equals(monospaceFontName)))
                 {
                     oreName = String.Format("{0,-" + maxOreLength + "}", oreName);
                     separator = "|";
@@ -991,6 +999,10 @@ namespace IngameScript
             if (lcd3 != null)
             {
                 ShowAndSetFontSize(lcd3, output);
+            }
+            else if (fitOn2IfPossible && lcd2 != null)
+            {
+                ShowAndSetFontSize(lcd2, lcd2.GetPublicText() + output);
             }
             Me.CustomData += output + "\n\n";
         }
