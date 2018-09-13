@@ -77,12 +77,12 @@ namespace IngameScript
             }
         }
 
-        public Dictionary<string, int> getComponents(string definition)
+        public Dictionary<string, int> GetComponents(string definition)
         {
             return blueprints[definition];
         }
 
-        public void addComponents(Dictionary<string, int> addTo, Dictionary<string, int> addFrom, int times = 1)
+        public void AddComponents(Dictionary<string, int> addTo, Dictionary<string, int> addFrom, int times = 1)
         {
             foreach (KeyValuePair<string, int> component in addFrom)
             {
@@ -114,7 +114,7 @@ namespace IngameScript
                     LargeGrid = false;
                 }
 
-                addComponents(totalComponents, getComponents(blockName), amount);
+                AddComponents(totalComponents, GetComponents(blockName), amount);
             }
 
             string armorType = "MyObjectBuilder_CubeBlock/";
@@ -130,7 +130,7 @@ namespace IngameScript
                 armorType += "SmallHeavyBlockArmorBlock";
 
             int armors = projector.RemainingArmorBlocks;
-            addComponents(totalComponents, getComponents(armorType), armors);
+            AddComponents(totalComponents, GetComponents(armorType), armors);
 
             var compList = totalComponents.ToList();
             //compList.Sort((x, y) => string.Compare(TranslateDef(x.Key), TranslateDef(y.Key)));
