@@ -13,7 +13,7 @@
  *   Link: https://steamcommunity.com/sharedfiles/filedetails/?id=1500259551
  *   
  *   MODS COMPATIBILITY:
- *      - By default the script is not compatible with mods adding new blocks or modifying the block needed components.
+ *      - By default the script is not compatible with mods adding new blocks or modifying their needed components.
  *      - The script can be made compatible with mods that modify or add new block definitions (but without adding new
  *          kinds of components to be assembled in an Assembler) running the following app:
  *          https://github.com/Juggernaut93/Projector2Assembler/releases
