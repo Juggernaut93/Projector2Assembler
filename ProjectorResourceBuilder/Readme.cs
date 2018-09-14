@@ -17,7 +17,7 @@
  *      - The script can be made compatible with mods that modify or add new block definitions (but without adding new
  *          kinds of components to be assembled in an Assembler) running the following app:
  *          https://github.com/Juggernaut93/Projector2Assembler/releases
- *      - Run the .exe file and follow the instructions shown on screen. A file will be created with the line of text
+ *      - Run the .exe file and follow the instructions on screen. A file will be created with the line of text
  *          that needs to be added to the script.
  *      - The app should be runnable on Windows 10 without additional dependencies.
  *      - On older versions of Windows this package might be needed:
