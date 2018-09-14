@@ -13,3 +13,5 @@ Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=150025955
 [**Assembler Needs Calculator**](Assembler%20Needs%20Calculator): show info about missing ingots and ores for your assemblers.
 
 Available here: https://steamcommunity.com/sharedfiles/filedetails/?id=1501171322
+
+[**BlockDefinitionExtractor**](BlockDefinitionExtractor): a Python script to extract block definitions necessary to use Projector2Assembler and Projector2LCD with **modded** games that include non-vanilla blocks.
