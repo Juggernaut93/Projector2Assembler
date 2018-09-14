@@ -12,6 +12,18 @@
  *   CHECK ALSO: Projector2LCD (also by Juggernaut93) to show info about missing components, ingots and ores.
  *   Link: https://steamcommunity.com/sharedfiles/filedetails/?id=1500259551
  *   
+ *   MODS COMPATIBILITY:
+ *      - By default the script is not compatible with mods adding new blocks or modifying the block needed components.
+ *      - The script can be made compatible with mods that modify or add new block definitions (but without adding new
+ *          kinds of components to be assembled in an Assembler) running the following app:
+ *          https://github.com/Juggernaut93/Projector2Assembler/releases
+ *      - Run the .exe file and follow the instructions shown on screen. A file will be created with the line of text
+ *          that needs to be added to the script.
+ *      - The app should be runnable on Windows 10 without additional dependencies.
+ *      - On older versions of Windows this package might be needed:
+ *          https://www.microsoft.com/en-US/download/details.aspx?id=48145
+ *      - If you have problems running the .exe app, you can run the .py executable using Python on the command line.
+ *   
  *   SETUP:
  *      - You obviously need a programming block, a projector, an assembler
  *      - Run the script with this argument: [ProjectorName];[AssemblerName];[lightArmor];[staggeringFactor];[fewFirst];[onlyRemaining]
