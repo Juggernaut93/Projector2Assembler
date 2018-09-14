@@ -9,17 +9,41 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projector2LCD", "Projector2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler Needs Calculator", "Assembler Needs Calculator\Assembler Needs Calculator.csproj", "{FC94512E-340B-408F-A709-24E28D1F2C23}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BlockDefinitionExtractor", "BlockDefinitionExtractor\BlockDefinitionExtractor.pyproj", "{1697E6A5-82A1-4BEE-BAB3-325EE4B6118F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Debug|x64.ActiveCfg = Debug|x64
 		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Debug|x64.Build.0 = Debug|x64
+		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Release|Any CPU.ActiveCfg = Debug|x64
+		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Release|Any CPU.Build.0 = Debug|x64
+		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Release|x64.ActiveCfg = Debug|x64
+		{4F97BC68-DA86-4373-AB3E-4E84222C51B7}.Release|x64.Build.0 = Debug|x64
+		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Debug|x64.ActiveCfg = Debug|x64
 		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Debug|x64.Build.0 = Debug|x64
+		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Release|Any CPU.ActiveCfg = Debug|x64
+		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Release|Any CPU.Build.0 = Debug|x64
+		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Release|x64.ActiveCfg = Debug|x64
+		{4B34726A-7914-469C-B4DD-6675E91B61BA}.Release|x64.Build.0 = Debug|x64
+		{FC94512E-340B-408F-A709-24E28D1F2C23}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{FC94512E-340B-408F-A709-24E28D1F2C23}.Debug|x64.ActiveCfg = Debug|x64
 		{FC94512E-340B-408F-A709-24E28D1F2C23}.Debug|x64.Build.0 = Debug|x64
+		{FC94512E-340B-408F-A709-24E28D1F2C23}.Release|Any CPU.ActiveCfg = Debug|x64
+		{FC94512E-340B-408F-A709-24E28D1F2C23}.Release|Any CPU.Build.0 = Debug|x64
+		{FC94512E-340B-408F-A709-24E28D1F2C23}.Release|x64.ActiveCfg = Debug|x64
+		{FC94512E-340B-408F-A709-24E28D1F2C23}.Release|x64.Build.0 = Debug|x64
+		{1697E6A5-82A1-4BEE-BAB3-325EE4B6118F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1697E6A5-82A1-4BEE-BAB3-325EE4B6118F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1697E6A5-82A1-4BEE-BAB3-325EE4B6118F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1697E6A5-82A1-4BEE-BAB3-325EE4B6118F}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
