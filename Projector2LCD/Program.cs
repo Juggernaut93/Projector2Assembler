@@ -430,7 +430,7 @@ namespace IngameScript
                 // blockInfo[0] is blueprint, blockInfo[1] is number of required item
                 string[] blockInfo = item.ToString().Trim(remove).Split(delimiters, StringSplitOptions.None);
 
-                string blockName = blockInfo[0];
+                string blockName = blockInfo[0].Replace(" ", ""); // data in blockDefinitionData is compressed removing spaces
                 int amount = Convert.ToInt32(blockInfo[1]);
 
                 if (blockName.StartsWith("SmallBlock"))
