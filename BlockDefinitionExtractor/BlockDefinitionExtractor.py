@@ -214,16 +214,17 @@ def closeAllTempDirs():
 def getCubeBlocksTree(m):
     m = os.path.join(m, "Data")
     parseTrees = []
-    files = [os.path.join(m, file) for file in os.listdir(m) if os.path.isfile(os.path.join(m, file)) and file.endswith(".sbc")]
-    for f in files:
-        tree = ET.parse(f)
-        cb = tree.getroot().find('CubeBlocks')
-        if cb is None:
-            continue
-        df = cb.find('Definition')
-        if df is None:
-            continue
-        parseTrees.append(cb)
+    if os.path.exists(m):
+        files = [os.path.join(m, file) for file in os.listdir(m) if os.path.isfile(os.path.join(m, file)) and file.endswith(".sbc")]
+        for f in files:
+            tree = ET.parse(f)
+            cb = tree.getroot().find('CubeBlocks')
+            if cb is None:
+                continue
+            df = cb.find('Definition')
+            if df is None:
+                continue
+            parseTrees.append(cb)
     return parseTrees
 
 
