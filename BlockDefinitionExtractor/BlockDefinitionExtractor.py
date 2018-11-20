@@ -298,7 +298,13 @@ def examinePackage(m):
 
 def assembleBlockDefinitionData():
     global bpnames, subTypes, blockDefinitions
-    subTypes = list(map(lambda x: bpnames[x], subTypes))
+    try:
+        subTypes = list(map(lambda x: bpnames[x], subTypes))
+    except KeyError:
+        w = Tk()
+        w.withdraw()
+        messagebox.showerror("Error", "Mods that add new building components are currently not supported! Sorry for the inconvenience.")
+        sys.exit()
     ret = '*'.join(subTypes)
     
     for key, value in blockDefinitions.items():
