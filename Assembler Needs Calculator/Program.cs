@@ -917,21 +917,22 @@ namespace IngameScript
                 {
                     for (int i = 0; i < b.InventoryCount; i++)
                     {
-                        var itemList = b.GetInventory(i).GetItems();
+                        var itemList = new List<MyInventoryItem>();
+                        b.GetInventory(i).GetItems(itemList);
                         foreach (var item in itemList)
                         {
-                            var type = item.Content.TypeId.ToString();
+                            var type = item.Type.TypeId;
                             if (componentPrefixes.Contains(type.Replace("MyObjectBuilder_", "")))
                             {
-                                AddCountToDict(componentAmounts, item.Content.SubtypeId.ToString(), item.Amount);
+                                AddCountToDict(componentAmounts, item.Type.SubtypeId, item.Amount);
                             }
                             else if (type.Equals("MyObjectBuilder_Ingot"))
                             {
-                                AddCountToDict(ingotAmounts, (Ingots)Enum.Parse(typeof(Ingots), item.Content.SubtypeId.ToString()), item.Amount);
+                                AddCountToDict(ingotAmounts, (Ingots)Enum.Parse(typeof(Ingots), item.Type.SubtypeId), item.Amount);
                             }
                             else if (type.Equals("MyObjectBuilder_Ore"))
                             {
-                                AddCountToDict(oreAmounts, (Ores)Enum.Parse(typeof(Ores), item.Content.SubtypeId.ToString()), item.Amount);
+                                AddCountToDict(oreAmounts, (Ores)Enum.Parse(typeof(Ores), item.Type.SubtypeId), item.Amount);
                             }
                         }
                     }
