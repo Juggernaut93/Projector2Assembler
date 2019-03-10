@@ -356,7 +356,7 @@ namespace IngameScript
             [Ores.Scrap] = FP("0.8"),
             [Ores.Silicon] = FP("0.7"),
             [Ores.Silver] = FP("0.1"),
-            [Ores.Stone] = FP("0.9"),
+            [Ores.Stone] = FP("0.027"),
             [Ores.Uranium] = FP("0.01"),
         };
 
@@ -676,11 +676,11 @@ namespace IngameScript
 
         private ConversionData GetConversionData(Ores ore)
         {
-            var refConvRate = Math.Min(1f, 0.8f * (float)conversionRates[ore] * (float)effectivenessMultiplier);
+            var refConvRate = Math.Min(1f, 1.0f * (float)conversionRates[ore] * (float)effectivenessMultiplier); // refinery now has 1.0 material efficiency multiplier
             var ret = new ConversionData { conversionRate = refConvRate, basicRefinery = false };
             if (basicRefineryOres.Contains(ore))
             {
-                var arcConvRate = Math.Min(1f, 0.9f * (float)conversionRates[ore]); // Arc Furnace has no yield ports
+                var arcConvRate = Math.Min(1f, 0.7f * (float)conversionRates[ore]); // Arc Furnace has no yield ports and 0.7 material efficiency multiplier
                 // if there are both refineries and arc furnace, or there is neither, we prefer the best yield
                 // or we prefer arc furnace rate when there is one but no refinery
                 if ((arcConvRate > refConvRate && (atLeastOnebasicRefinery == atLeastOneRefinery)) || (atLeastOnebasicRefinery && !atLeastOneRefinery))
