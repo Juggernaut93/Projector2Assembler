@@ -35,6 +35,10 @@
  *        it to 3x, then set the variable to 3; if you have set it to 10x, then set the variable to 10;
  *      - The script will run indefinitely with the specified settings. To change settings, just re-run the
  *          script with the different parameters.
+ *   
+ *   MODS COMPATIBILITY:
+ *      - The script is not compatible with mods adding new types of components.
+ *      - The script will ignore non-vanilla types of ores/ingots too and these won't be shown on the LCDs.
  *  
  *   ADDITIONAL CONFIGURATION:
  *      The script has a number of hardcoded parameters that you can change. The parameters are in the section

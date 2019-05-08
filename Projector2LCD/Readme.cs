@@ -26,6 +26,7 @@
  *      - On older versions of Windows this package might be needed:
  *          https://www.microsoft.com/en-US/download/details.aspx?id=48145
  *      - If you have problems running the .exe app, you can run the .py executable using Python on the command line.
+ *      - The script will ignore non-vanilla types of ores/ingots too and these won't be shown on the LCDs.
  *   
  *   SETUP:
  *      - You need a programming block, a projector and up to 3 LCD screens. Text panels, small and wide LCD
