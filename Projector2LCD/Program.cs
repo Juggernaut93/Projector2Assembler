@@ -648,6 +648,7 @@ namespace IngameScript
 
         private void ShowAndSetFontSize(IMyTextPanel lcd, string text)
         {
+            lcd.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
             lcd.WriteText(text);
 
             if (!autoResizeText || lcd.Font != monospaceFontName)
@@ -810,6 +811,7 @@ namespace IngameScript
             Dictionary<string, VRage.MyFixedPoint> componentAmounts = new Dictionary<string, VRage.MyFixedPoint>();
             Dictionary<Ingots, VRage.MyFixedPoint> ingotAmounts = new Dictionary<Ingots, VRage.MyFixedPoint>();
             Dictionary<Ores, VRage.MyFixedPoint> oreAmounts = new Dictionary<Ores, VRage.MyFixedPoint>();
+            bool moddedIngotsOres = false;
             foreach (var b in cubeBlocks)
             {
                 if (b.HasInventory)
@@ -826,15 +828,33 @@ namespace IngameScript
                             }
                             else if (item.Type.TypeId.Equals("MyObjectBuilder_Ingot"))
                             {
-                                AddCountToDict(ingotAmounts, (Ingots)Enum.Parse(typeof(Ingots), item.Type.SubtypeId), item.Amount);
+                                try
+                                {
+                                    AddCountToDict(ingotAmounts, (Ingots)Enum.Parse(typeof(Ingots), item.Type.SubtypeId), item.Amount);
+                                }
+                                catch (Exception)
+                                {
+                                    moddedIngotsOres = true;
+                                }
                             }
                             else if (item.Type.TypeId.Equals("MyObjectBuilder_Ore"))
                             {
-                                AddCountToDict(oreAmounts, (Ores)Enum.Parse(typeof(Ores), item.Type.SubtypeId), item.Amount);
+                                try
+                                {
+                                    AddCountToDict(oreAmounts, (Ores)Enum.Parse(typeof(Ores), item.Type.SubtypeId), item.Amount);
+                                }
+                                catch (Exception)
+                                {
+                                    moddedIngotsOres = true;
+                                }
                             }
                         }
                     }
                 }
+            }
+            if (moddedIngotsOres)
+            {
+                Echo("WARNING: detected non-vanilla ores or ingots. Modded ores and ingots are ignored by this script.");
             }
 
             Me.CustomData = "";
