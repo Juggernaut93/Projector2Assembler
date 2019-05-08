@@ -760,8 +760,7 @@ namespace IngameScript
 
         private void ShowAndSetFontSize(IMyTextPanel lcd, string text)
         {
-            lcd.WritePublicText(text);
-            lcd.ShowPublicTextOnScreen();
+            lcd.WriteText(text);
 
             if (!autoResizeText || lcd.Font != monospaceFontName)
                 return;
@@ -1087,7 +1086,7 @@ namespace IngameScript
             }
             else if (fitOn2IfPossible && lcd2 != null)
             {
-                ShowAndSetFontSize(lcd2, lcd2.GetPublicText() + output);
+                ShowAndSetFontSize(lcd2, lcd2.GetText() + output);
             }
             Me.CustomData += output + "\n\n";
 
