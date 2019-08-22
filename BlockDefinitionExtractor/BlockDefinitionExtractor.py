@@ -8,6 +8,7 @@ import sys
 import urllib.request
 import zipfile
 import tempfile
+from pathlib import Path
 
 steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\Valve\Steam")
 steam_path = winreg.QueryValueEx(steam_key, "SteamPath")[0]
@@ -196,7 +197,9 @@ bpnames = {
     "Superconductor": "Superconductor",
     "Thrust": "ThrustComponent",
     "Reactor": "ReactorComponent",
-    "SolarCell": "SolarCell"
+    "SolarCell": "SolarCell",
+    # Economy Components
+    "ZoneChip": "ZoneChip",
 }
 
 tempdirs = []
@@ -215,9 +218,13 @@ def getCubeBlocksTree(m):
     m = os.path.join(m, "Data")
     parseTrees = []
     if os.path.exists(m):
-        files = [os.path.join(m, file) for file in os.listdir(m) if os.path.isfile(os.path.join(m, file)) and file.endswith(".sbc")]
+        #files = [os.path.join(m, file) for file in os.listdir(m) if os.path.isfile(os.path.join(m, file)) and file.endswith(".sbc")]
+        files = [os.path.join(m, file) for file in Path(m).glob('**/*.sbc')]
         for f in files:
-            tree = ET.parse(f)
+            try:
+                tree = ET.parse(f)
+            except ET.ParseError:
+                continue
             cb = tree.getroot().find('CubeBlocks')
             if cb is None:
                 continue
