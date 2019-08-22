@@ -31,7 +31,7 @@ namespace IngameScript
         private readonly bool assemblersFromSubgrids = false; // consider assemblers on subgrids (if no assembler group is specified)
         private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
-        private readonly bool alwaysShowAmmos = true, alwaysShowTools = false; // show ammos/tools even when no assembler are producing them (beware the screen clutter)
+        private readonly bool alwaysShowAmmos = true, alwaysShowTools = false; // show ammos/tools even when no assembler are producing them (beware the screen clutter - Datapads are considered tools)
         private readonly bool showAllIngotsOres = true; // show all ingots/ores, even if they are not used to build any components shown on the first LCD (scrap will still be ignored if not in inventory)
         private readonly bool onlyEnabledAssemblers = false; // if true, only enabled assemblers will be considered (if no assembler group is specified)
         /**********************************************/
@@ -84,6 +84,8 @@ namespace IngameScript
             ["Superconductor"] = "Superconductor Conduits",
             ["ThrustComponent"] = "Thruster Components",
             ["ZoneChip"] = "Zone Chip",
+            // datapad
+            ["Datapad"] = "Datapad",
             // ammos
             ["NATO_5p56x45mmMagazine"] = "5.56x45mm NATO Magazine",
             ["NATO_25x184mmMagazine"] = "25x184mm NATO ammo container",
@@ -181,6 +183,7 @@ namespace IngameScript
             ["Superconductor"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 10, [Ingots.Gold] = 2 },
             ["ThrustComponent"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 30, [Ingots.Cobalt] = 10, [Ingots.Gold] = 1, [Ingots.Platinum] = FP("0.4") },
             // economy comps
+            ["Datapad"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 1, [Ingots.Silicon] = 5, [Ingots.Stone] = 1 },
             ["ZoneChip"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled
             // ammos
             ["NATO_5p56x45mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
@@ -233,6 +236,7 @@ namespace IngameScript
             ["SolarCell"] = "SolarCell", //Component
             ["PowerCell"] = "PowerCell", //Component
             ["ZoneChip"] = "ZoneChip", //Component
+            ["Datapad"] = "Datapad", //Datapad
             ["AutomaticRifle"] = "AutomaticRifleItem", //PhysicalGunObject
             ["RapidFireAutomaticRifle"] = "RapidFireAutomaticRifleItem", //PhysicalGunObject
             ["PreciseAutomaticRifle"] = "PreciseAutomaticRifleItem", //PhysicalGunObject
@@ -281,6 +285,7 @@ namespace IngameScript
             ["SolarCell"] = "Component",
             ["PowerCell"] = "Component",
             ["ZoneChip"] = "Component",
+            ["Datapad"] = "Datapad",
             ["AutomaticRifle"] = "PhysicalGunObject",
             ["RapidFireAutomaticRifle"] = "PhysicalGunObject",
             ["PreciseAutomaticRifle"] = "PhysicalGunObject",
@@ -308,13 +313,15 @@ namespace IngameScript
             "AmmoMagazine",
             "PhysicalGunObject",
             "OxygenContainerObject",
-            "GasContainerObject"
+            "GasContainerObject",
+            "Datapad"
         };
 
         private readonly string[] toolsPrefixes = new string[] {
             "PhysicalGunObject",
             "OxygenContainerObject",
-            "GasContainerObject"
+            "GasContainerObject",
+            "Datapad"
         };
 
         private readonly Ores[] basicRefineryOres = new Ores[] { Ores.Iron, Ores.Nickel, Ores.Cobalt, Ores.Silicon, Ores.Magnesium, Ores.Stone, Ores.Scrap };
