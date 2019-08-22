@@ -83,6 +83,7 @@ namespace IngameScript
             ["SteelPlate"] = "Steel Plate",
             ["Superconductor"] = "Superconductor Conduits",
             ["ThrustComponent"] = "Thruster Components",
+            ["ZoneChip"] = "Zone Chip",
             // ammos
             ["NATO_5p56x45mmMagazine"] = "5.56x45mm NATO Magazine",
             ["NATO_25x184mmMagazine"] = "25x184mm NATO ammo container",
@@ -179,6 +180,8 @@ namespace IngameScript
             ["SteelPlate"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 21 },
             ["Superconductor"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 10, [Ingots.Gold] = 2 },
             ["ThrustComponent"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 30, [Ingots.Cobalt] = 10, [Ingots.Gold] = 1, [Ingots.Platinum] = FP("0.4") },
+            // economy comps
+            ["ZoneChip"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled
             // ammos
             ["NATO_5p56x45mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
             ["NATO_25x184mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 40, [Ingots.Nickel] = 5, [Ingots.Magnesium] = 3 },
@@ -229,6 +232,7 @@ namespace IngameScript
             ["ExplosivesComponent"] = "Explosives", //Component
             ["SolarCell"] = "SolarCell", //Component
             ["PowerCell"] = "PowerCell", //Component
+            ["ZoneChip"] = "ZoneChip", //Component
             ["AutomaticRifle"] = "AutomaticRifleItem", //PhysicalGunObject
             ["RapidFireAutomaticRifle"] = "RapidFireAutomaticRifleItem", //PhysicalGunObject
             ["PreciseAutomaticRifle"] = "PreciseAutomaticRifleItem", //PhysicalGunObject
@@ -276,6 +280,7 @@ namespace IngameScript
             ["ExplosivesComponent"] = "Component",
             ["SolarCell"] = "Component",
             ["PowerCell"] = "Component",
+            ["ZoneChip"] = "Component",
             ["AutomaticRifle"] = "PhysicalGunObject",
             ["RapidFireAutomaticRifle"] = "PhysicalGunObject",
             ["PreciseAutomaticRifle"] = "PhysicalGunObject",
@@ -348,7 +353,7 @@ namespace IngameScript
         {
             [Ores.Cobalt] = FP("0.3"),
             [Ores.Gold] = FP("0.01"),
-            [Ores.Ice] = 0, // ice conversion rate is not refined in refinery or basic refinery
+            [Ores.Ice] = 0, // ice is not refined in refinery or basic refinery
             [Ores.Iron] = FP("0.7"),
             [Ores.Magnesium] = FP("0.007"),
             [Ores.Nickel] = FP("0.4"),
@@ -356,7 +361,7 @@ namespace IngameScript
             [Ores.Scrap] = FP("0.8"),
             [Ores.Silicon] = FP("0.7"),
             [Ores.Silver] = FP("0.1"),
-            [Ores.Stone] = FP("0.027"),
+            [Ores.Stone] = FP("0.014"), // currently ignoring low-efficiency Iron, Nickel and Silicon production from Stone
             [Ores.Uranium] = FP("0.01"),
         };
 
@@ -398,7 +403,7 @@ namespace IngameScript
                 if (name.Length > maxOreLength)
                     maxOreLength = name.Length;
             }
-            // account for possible '^' character for ores that can be refined in an Arc Furnace
+            // account for possible '^' character for ores that can be refined in an Basic Refinery
             foreach (var ore in basicRefineryOres)
             {
                 if (oreTranslation[ore].Length + 1 > maxOreLength)
@@ -680,9 +685,9 @@ namespace IngameScript
             var ret = new ConversionData { conversionRate = refConvRate, basicRefinery = false };
             if (basicRefineryOres.Contains(ore))
             {
-                var arcConvRate = Math.Min(1f, 0.7f * (float)conversionRates[ore]); // Arc Furnace has no yield ports and 0.7 material efficiency multiplier
-                // if there are both refineries and arc furnace, or there is neither, we prefer the best yield
-                // or we prefer arc furnace rate when there is one but no refinery
+                var arcConvRate = Math.Min(1f, 0.7f * (float)conversionRates[ore]); // Basic refinery has no yield ports and 0.7 material efficiency multiplier
+                // if there are both refineries and basic refineries, or there is neither, we prefer the best yield
+                // or we prefer basic refinery rate when there is one but no refinery
                 if ((arcConvRate > refConvRate && (atLeastOnebasicRefinery == atLeastOneRefinery)) || (atLeastOnebasicRefinery && !atLeastOneRefinery))
                 {
                     ret.conversionRate = arcConvRate;
@@ -771,8 +776,8 @@ namespace IngameScript
                 return;
 
             LCDType type = GetLCDType(lcd);
-            float maxWidth = type == LCDType.WIDE ? wideLCDWidth : LCDWidth;
-            float maxHeight = type == LCDType.WIDE ? wideLCDHeight : LCDHeight;
+            float maxWidth = (type == LCDType.WIDE ? wideLCDWidth : LCDWidth) * (1 - lcd.TextPadding * 0.02f); // padding is in percentage, 0.02 = 1/100 * 2 (from both sides)
+            float maxHeight = (type == LCDType.WIDE ? wideLCDHeight : LCDHeight) * (1 - lcd.TextPadding * 0.02f); // padding is in percentage, 0.02 = 1/100 * 2 (from both sides)
 
             float maxFontSizeByWidth = maxWidth / size.Width;
             float maxFontSizeByHeight = maxHeight / size.Height;
