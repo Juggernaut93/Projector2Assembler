@@ -32,7 +32,7 @@
  *          - AssemblerName (default: Assembler) is the name of the assembler that will produce the needed components
  *          - lightArmor is true (default) or false and tells the script to assume all the armor blocks listed by
  *              the projector are respectively Light Armor Blocks or Heavy Armor Blocks
- *          - staggeringFactor is a non-negative integer (10 by default) that tells the script how to stagger the
+ *          - staggeringFactor is a positive integer (10 by default) that tells the script how to stagger the
  *              production
  *          - fewFirst is true (default) or false and tells the script to queue the components in the assembler
  *              sorted by amount. If false, the order is undefined (currently it's alphabetical, but it's not
