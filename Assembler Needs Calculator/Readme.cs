@@ -57,8 +57,8 @@
  *              average effectiveness
  *          - assemblersFromSubgrids specifies if assemblers on subgrids have to be considered when no
  *              assemblerGroupName is specified
- *          - autoResizeText specifies if text should be resized to fit the LCD screen. Only works if the LCD
- *              is set to Monospace font.
+ *          - autoResizeText specifies if text should be resized to fit the LCD screen. It sets the LCD font
+ *              to Monospace.
  *          - fitOn2IfPossible determines if the script can try to fit the information about missing ores
  *              on the seconds LCD when the third LCD is not specified or invalid
  *          - alwaysShowAmmos, alwaysShowTools: if true, the first LCD will show ammos/tools on screen even

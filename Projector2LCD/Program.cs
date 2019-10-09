@@ -28,7 +28,7 @@ namespace IngameScript
         private readonly int ingotDecimals = 2, oreDecimals = 2; // max decimal digits to show
         private readonly bool inventoryFromSubgrids = false; // consider inventories on subgrids when computing available materials
         private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
-        private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
+        private readonly bool autoResizeText = true; // makes the text fit inside the LCD. If true, it forces the font to be Monospace
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
         /**********************************************/
         /************ END OF CONFIGURATION ************/
@@ -427,7 +427,6 @@ namespace IngameScript
             char[] delimiters = new char[] { ',' };
             char[] remove = new char[] { '[', ']' };
             Dictionary<string, int> totalComponents = new Dictionary<string, int>();
-            bool LargeGrid = true;
             foreach (var item in blocks)
             {
                 // blockInfo[0] is blueprint, blockInfo[1] is number of required item
@@ -436,13 +435,10 @@ namespace IngameScript
                 string blockName = blockInfo[0].Replace(" ", ""); // data in blockDefinitionData is compressed removing spaces
                 int amount = Convert.ToInt32(blockInfo[1]);
 
-                if (blockName.StartsWith("SmallBlock"))
-                {
-                    LargeGrid = false;
-                }
-
                 AddComponents(totalComponents, GetComponents(blockName), amount);
             }
+
+            bool LargeGrid = projector.BlockDefinition.SubtypeId == "LargeProjector";
 
             string armorType = "MyObjectBuilder_CubeBlock/";
             if (LargeGrid)
@@ -654,8 +650,9 @@ namespace IngameScript
             lcd.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
             lcd.WriteText(text);
 
-            if (!autoResizeText || lcd.Font != monospaceFontName)
+            if (!autoResizeText)
                 return;
+            lcd.Font = monospaceFontName;
 
             Size size = GetOutputSize(text);
             if (size.Width == 0)

@@ -29,7 +29,7 @@ namespace IngameScript
         private readonly bool inventoryFromSubgrids = false; // consider inventories on subgrids when computing available materials
         private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
         private readonly bool assemblersFromSubgrids = false; // consider assemblers on subgrids (if no assembler group is specified)
-        private readonly bool autoResizeText = true; // NOTE: it only works if monospace font is enabled, ignored otherwise
+        private readonly bool autoResizeText = true; // makes the text fit inside the LCD. If true, it forces the font to be Monospace
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
         private readonly bool alwaysShowAmmos = true, alwaysShowTools = false; // show ammos/tools even when no assembler are producing them (beware the screen clutter - Datapads are considered tools)
         private readonly bool showAllIngotsOres = true; // show all ingots/ores, even if they are not used to build any components shown on the first LCD (scrap will still be ignored if not in inventory)
@@ -775,8 +775,9 @@ namespace IngameScript
             lcd.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
             lcd.WriteText(text);
 
-            if (!autoResizeText || lcd.Font != monospaceFontName)
+            if (!autoResizeText)
                 return;
+            lcd.Font = monospaceFontName;
 
             Size size = GetOutputSize(text);
             if (size.Width == 0)
