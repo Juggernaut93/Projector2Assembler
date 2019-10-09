@@ -72,8 +72,8 @@
  *              available materials
  *          - refineriesFromSubgrids specifies if refineries on subgrids have to be considered when computing
  *              average effectiveness
- *          - autoResizeText specifies if text should be resized to fit the LCD screen. Only works if the LCD
- *              is set to Monospace font.
+ *          - autoResizeText specifies if text should be resized to fit the LCD screen. It sets the LCD font
+ *              to Monospace.
  *          - fitOn2IfPossible determines if the script can try to fit the information about missing ores
  *              on the seconds LCD when the third LCD is not specified or invalid
  *      It is also possible to easily change the language of the text shown by modifying the strings in the
