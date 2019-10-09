@@ -100,7 +100,6 @@ namespace IngameScript
             char[] delimiters = new char[] { ',' };
             char[] remove = new char[] { '[', ']' };
             Dictionary<string, int> totalComponents = new Dictionary<string, int>();
-            bool LargeGrid = true;
             foreach (var item in blocks)
             {
                 // blockInfo[0] is blueprint, blockInfo[1] is number of required item
@@ -109,13 +108,10 @@ namespace IngameScript
                 string blockName = blockInfo[0].Replace(" ", ""); // data in blockDefinitionData is compressed removing spaces
                 int amount = Convert.ToInt32(blockInfo[1]);
 
-                if (blockName.StartsWith("SmallBlock"))
-                {
-                    LargeGrid = false;
-                }
-
                 AddComponents(totalComponents, GetComponents(blockName), amount);
             }
+
+            bool LargeGrid = projector.BlockDefinition.SubtypeId == "LargeProjector";
 
             string armorType = "MyObjectBuilder_CubeBlock/";
             if (LargeGrid)
