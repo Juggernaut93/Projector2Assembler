@@ -58,7 +58,13 @@ def updateSaveList(optMenu, folder, var):
     var.set('')
     optMenu['menu'].delete(0, 'end')
     userpath = os.path.join(SE_save_path, folder)
-    saves = [save for save in os.listdir(userpath) if os.path.isdir(os.path.join(userpath, save))]
+    saves_raw = [save for save in os.listdir(userpath) if os.path.isdir(os.path.join(userpath, save))]
+    saves = []
+    for save in saves_raw:
+        if not os.path.isfile(os.path.join(userpath, save, "Sandbox.sbc")):
+            saves.extend([os.path.join(save, sv) for sv in os.listdir(os.path.join(userpath, save)) if os.path.isdir(os.path.join(userpath, save, sv)) and os.path.isfile(os.path.join(userpath, save, sv, "Sandbox.sbc"))])
+        else:
+            saves.append(save)
     saves.sort(key=lambda s: os.path.getmtime(os.path.join(userpath, s)), reverse=True)
     for i in saves:
         optMenu['menu'].add_command(label=i, command=lambda x=i: var.set(x))
