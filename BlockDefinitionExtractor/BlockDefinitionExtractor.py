@@ -28,8 +28,10 @@ for lib in libraries:
     cur = os.path.join(lib, "SpaceEngineers")
     if os.path.exists(os.path.join(cur, "Bin64", "SpaceEngineers.exe")):
         SE_install_path = cur
+        SE_Steam_library = lib
         print("Space Engineers install path detected.")
         found = True
+        break
 
 if not found:
     while not found:
@@ -38,13 +40,20 @@ if not found:
             found = True
 
 SE_user_path = os.path.join(os.getenv("APPDATA"), "SpaceEngineers")
-SE_mod_path = os.path.join(SE_user_path, "Mods")
+SE_mod_path = os.path.abspath(os.path.join(SE_Steam_library, "..", "workshop", "content", "244850"))
 SE_save_path = os.path.join(SE_user_path, "Saves")
 
 def getMaxSaveLength(users):
     maxLength = 0
     for u in users:
-        saves = [save for save in os.listdir(os.path.join(SE_save_path, u)) if os.path.isdir(os.path.join(SE_save_path, u, save))]
+        userpath = os.path.join(SE_save_path, u)
+        saves = []
+        saves_raw = [save for save in os.listdir(userpath) if os.path.isdir(os.path.join(userpath, save))]
+        for save in saves_raw:
+            if not os.path.isfile(os.path.join(userpath, save, "Sandbox.sbc")):
+                saves.extend([os.path.join(save, sv) for sv in os.listdir(os.path.join(userpath, save)) if os.path.isdir(os.path.join(userpath, save, sv)) and os.path.isfile(os.path.join(userpath, save, sv, "Sandbox.sbc"))])
+            else:
+                saves.append(save)
         for i in saves:
             if len(i) > maxLength:
                 maxLength = len(i)
@@ -126,11 +135,11 @@ def getModsFromSave(save_folder):
     save = ET.parse(os.path.join(save_folder, 'Sandbox.sbc'))
     root = save.getroot()
     mods = root.find('Mods').findall('ModItem')
-    return [mod.find('Name').text for mod in mods]
+    return [mod.find('PublishedFileId').text for mod in mods]
 
 def getModName(mod):
-    if os.path.isdir(os.path.join(SE_mod_path, mod)):
-        return mod
+    #if os.path.isdir(os.path.join(SE_mod_path, mod)):
+    #    return mod
 
     with urllib.request.urlopen("https://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.replace('.sbm', '')) as page:
         contents = page.read().decode("utf-8")
@@ -153,12 +162,13 @@ def showSelectModsDialog(w):
     mods = []
     maxWidth = 0
     for mod in os.listdir(SE_mod_path):
-        print('Identifying', mod, '...')
-        mods.append(mod)
-        modname = getModName(mod)
-        if len(modname) > maxWidth:
-            maxWidth = len(modname)
-        listbox.insert(END, modname)
+        if len(os.listdir(os.path.join(SE_mod_path, mod))) > 0:
+            print('Identifying', mod, '...')
+            mods.append(mod)
+            modname = getModName(mod)
+            if len(modname) > maxWidth:
+                maxWidth = len(modname)
+            listbox.insert(END, modname)
     listbox.config(width = maxWidth)
     listbox.grid(row = 0, column = 0, columnspan = 3)
 
@@ -253,12 +263,21 @@ alreadyExaminedBlocks = []
 subTypes = []
 warnings = False
 def examinePackage(m):
-    if os.path.isfile(m):
-        m = extractMod(m)
     if not os.path.isdir(m):
         raise Exception("Invalid mod detected: " + m)
+    files = os.listdir(m)
+    additional_dirs = []
+    for f in files:
+        if f.endswith("_legacy.bin"):
+            additional_dirs.append(extractMod(os.path.join(m, f)))
 
     trees = getCubeBlocksTree(m)
+    if len(trees) == 0:
+        for dr in additional_dirs:
+            trees = getCubeBlocksTree(m)
+            if len(trees) != 0:
+                break
+
     global alreadyExaminedBlocks, subTypes, warnings
     
     for cubeBlocks in trees:
