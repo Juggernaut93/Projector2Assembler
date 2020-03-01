@@ -273,8 +273,8 @@ def examinePackage(m):
 
     trees = getCubeBlocksTree(m)
     if len(trees) == 0:
-        for dr in additional_dirs:
-            trees = getCubeBlocksTree(m)
+        for d in additional_dirs:
+            trees = getCubeBlocksTree(d)
             if len(trees) != 0:
                 break
 
