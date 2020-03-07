@@ -27,7 +27,7 @@
  *   SETUP:
  *      - You obviously need a programming block, a projector, an assembler
  *      - Run the script with this argument: [ProjectorName];[AssemblerName];[lightArmor];[staggeringFactor];[fewFirst];[onlyRemaining]
- *          - [] indicates it's an optional parameter
+ *          - [] indicates it's an optional parameter, do NOT include "[]" in the actual arguments!
  *          - ProjectorName (default: Projector) is the name of the projector with the blueprint you want to build
  *          - AssemblerName (default: Assembler) is the name of the assembler that will produce the needed components
  *          - lightArmor is true (default) or false and tells the script to assume all the armor blocks listed by
