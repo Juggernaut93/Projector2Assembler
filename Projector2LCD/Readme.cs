@@ -32,7 +32,7 @@
  *      - You need a programming block, a projector and up to 3 LCD screens. Text panels, small and wide LCD
  *        panels are supported. The use of Monospace font is RECOMMENDED (but not mandatory).
  *      - Run the script with this argument: [ProjectorName];[LCDName1];[LCDName2];[LCDName3];[lightArmor];[yieldPorts]
- *          - [] indicates it's an optional parameter
+ *          - [] indicates it's an optional parameter, do NOT include "[]" in the actual arguments!
  *          - ProjectorName is the name of the projector with the blueprint you want to show info about. If you
  *              don't specify a projector, the script will continuously search for a currently active projector
  *              and show the related info

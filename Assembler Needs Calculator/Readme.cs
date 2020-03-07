@@ -13,7 +13,7 @@
  *      - You need a programming block, assemblers and up to 3 LCD screens. Text panels, small and wide LCD
  *        panels are supported. The use of Monospace font is RECOMMENDED (but not mandatory).
  *      - Run the script with this argument: [AssemblerGroupName];[LCDName1];[LCDName2];[LCDName3];[yieldPorts]
- *          - [] indicates it's an optional parameter
+ *          - [] indicates it's an optional parameter, do NOT include "[]" in the actual arguments!
  *          - AssemblerGroupName is the name of the group of assemblers you want to show info about. If you
  *              don't specify a group, the script will show info about all the assemblers on your grid
  *          - LCDName1 is the name of the LCD that will show info about which components are currently in
