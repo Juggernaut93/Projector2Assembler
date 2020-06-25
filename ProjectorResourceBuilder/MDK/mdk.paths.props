@@ -2,8 +2,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MDKVersion>1.2.31</MDKVersion>
-    <MDKGameBinPath>D:\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64</MDKGameBinPath>
-    <MDKInstallPath>c:\users\julia\appdata\local\microsoft\visualstudio\16.0_bb06420b\extensions\ddigj0wh.bih</MDKInstallPath>
+    <MDKGameBinPath>E:\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64</MDKGameBinPath>
+    <MDKInstallPath>c:\users\julia\appdata\local\microsoft\visualstudio\15.0_f42d8490\extensions\5eef1sto.qic</MDKInstallPath>
     <MDKOutputPath>C:\Users\julia\AppData\Roaming\SpaceEngineers\IngameScripts\local</MDKOutputPath>
   </PropertyGroup>
   <ItemGroup>
