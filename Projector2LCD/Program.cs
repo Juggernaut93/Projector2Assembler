@@ -932,6 +932,7 @@ namespace IngameScript
                 ShowAndSetFontSize(lcd2, output);
             }
             Me.CustomData += output + "\n\n";
+            var output_lcd2 = output;
 
             var oresList = GetTotalOres(missingIngots);
             var oresTotalNeeded = GetTotalOres(ingotsTotalNeeded);
@@ -1022,7 +1023,7 @@ namespace IngameScript
             }
             else if (fitOn2IfPossible && lcd2 != null)
             {
-                ShowAndSetFontSize(lcd2, lcd2.GetText() + output);
+                ShowAndSetFontSize(lcd2, output_lcd2 + output);
             }
             Me.CustomData += output + "\n\n";
         }
