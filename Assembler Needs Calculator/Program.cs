@@ -87,16 +87,23 @@ namespace IngameScript
             // datapad
             ["Datapad"] = "Datapad",
             // ammos
-            ["NATO_5p56x45mmMagazine"] = "5.56x45mm NATO Magazine",
+            //["NATO_5p56x45mmMagazine"] = "5.56x45mm NATO Magazine",
             ["NATO_25x184mmMagazine"] = "25x184mm NATO ammo container",
             ["Missile200mm"] = "200mm missile container",
+            ["SemiAutoPistolMagazine"] = "S-10 Magazine",
+            ["FullAutoPistolMagazine"] = "S-20A Magazine",
+            ["ElitePistolMagazine"] = "S-10E Magazine",
+            ["AutomaticRifleGun_Mag_20rd"] = "MR-20 Magazine",
+            ["RapidFireAutomaticRifleGun_Mag_50rd"] = "MR-50A Magazine",
+            ["PreciseAutomaticRifleGun_Mag_5rd"] = "MR-8P Magazine",
+            ["UltimateAutomaticRifleGun_Mag_30rd"] = "MR-30E Magazine",
             // tools
             ["OxygenBottle"] = "Oxygen Bottle",
             ["HydrogenBottle"] = "Hydrogen Bottle",
-            ["AutomaticRifle"] = "Automatic Rifle",
-            ["RapidFireAutomaticRifle"] = "Rapid-Fire Automatic Rifle",
-            ["PreciseAutomaticRifle"] = "Precise Automatic Rifle",
-            ["UltimateAutomaticRifle"] = "Elite Automatic Rifle",
+            ["AutomaticRifle"] = "MR-20",
+            ["RapidFireAutomaticRifle"] = "MR-50A",
+            ["PreciseAutomaticRifle"] = "MR-8P",
+            ["UltimateAutomaticRifle"] = "MR-30E",
             ["Welder"] = "Welder",
             ["Welder2"] = "Enhanced Welder",
             ["Welder3"] = "Proficient Welder",
@@ -109,6 +116,11 @@ namespace IngameScript
             ["HandDrill2"] = "Enhanced Hand Drill",
             ["HandDrill3"] = "Proficient Hand Drill",
             ["HandDrill4"] = "Elite Hand Drill",
+            ["BasicHandHeldLauncher"] = "RO-1",
+            ["AdvancedHandHeldLauncher"] = "PRO-1",
+            ["SemiAutoPistol"] = "S-10",
+            ["FullAutoPistol"] = "S-20A",
+            ["EliteAutoPistol"] = "S-10E",
         };
         private readonly Dictionary<Ingots, string> ingotTranslation = new Dictionary<Ingots, string>()
         {
@@ -186,8 +198,15 @@ namespace IngameScript
             ["Datapad"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 1, [Ingots.Silicon] = 5, [Ingots.Stone] = 1 },
             ["ZoneChip"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled
             // ammos
-            ["NATO_5p56x45mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
+            //["NATO_5p56x45mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
             ["NATO_25x184mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 40, [Ingots.Nickel] = 5, [Ingots.Magnesium] = 3 },
+            ["SemiAutoPistolMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.25"), [Ingots.Nickel] = FP("0.05"), [Ingots.Magnesium] = FP("0.05") },
+            ["FullAutoPistolMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.5"), [Ingots.Nickel] = FP("0.1"), [Ingots.Magnesium] = FP("0.1") },
+            ["ElitePistolMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.3"), [Ingots.Nickel] = FP("0.1"), [Ingots.Magnesium] = FP("0.1") },
+            ["AutomaticRifleGun_Mag_20rd"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
+            ["RapidFireAutomaticRifleGun_Mag_50rd"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 2, [Ingots.Nickel] = FP("0.5"), [Ingots.Magnesium] = FP("0.4") },
+            ["PreciseAutomaticRifleGun_Mag_5rd"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
+            ["UltimateAutomaticRifleGun_Mag_30rd"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("1.2"), [Ingots.Nickel] = FP("0.4"), [Ingots.Magnesium] = FP("0.25") },
             ["Missile200mm"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 55, [Ingots.Nickel] = 7, [Ingots.Magnesium] = FP("1.2"), [Ingots.Silicon] = FP("0.2"), [Ingots.Uranium] = FP("0.1"), [Ingots.Platinum] = FP("0.04") },
             // tools
             ["OxygenBottle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 80, [Ingots.Nickel] = 30, [Ingots.Silicon] = 10 },
@@ -208,6 +227,11 @@ namespace IngameScript
             ["HandDrill2"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 5 },
             ["HandDrill3"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 3, [Ingots.Silver] = 2 },
             ["HandDrill4"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 3, [Ingots.Platinum] = 2 },
+            ["BasicHandHeldLauncher"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 30, [Ingots.Nickel] = 10, [Ingots.Cobalt] = 5 },
+            ["AdvancedHandHeldLauncher"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 30, [Ingots.Nickel] = 10, [Ingots.Cobalt] = 5, [Ingots.Platinum] = 5 },
+            ["SemiAutoPistol"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 1, [Ingots.Nickel] = FP("0.3") },
+            ["FullAutoPistol"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("1.5"), [Ingots.Nickel] = FP("0.5") },
+            ["EliteAutoPistol"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 1, [Ingots.Nickel] = FP("0.4"), [Ingots.Platinum] = FP("0.5"), [Ingots.Silver] = 1 }
         };
 
         private readonly Dictionary<string, string> blueprintDefSubtypeToItemSubtype = new Dictionary<string, string>()
@@ -241,6 +265,11 @@ namespace IngameScript
             ["RapidFireAutomaticRifle"] = "RapidFireAutomaticRifleItem", //PhysicalGunObject
             ["PreciseAutomaticRifle"] = "PreciseAutomaticRifleItem", //PhysicalGunObject
             ["UltimateAutomaticRifle"] = "UltimateAutomaticRifleItem", //PhysicalGunObject
+            ["BasicHandHeldLauncher"] = "BasicHandHeldLauncherItem", //PhysicalGunObject
+            ["AdvancedHandHeldLauncher"] = "AdvancedHandHeldLauncherItem", //PhysicalGunObject
+            ["SemiAutoPistol"] = "SemiAutoPistolItem", //PhysicalGunObject
+            ["FullAutoPistol"] = "FullAutoPistolItem", //PhysicalGunObject
+            ["EliteAutoPistol"] = "ElitePistolItem", //PhysicalGunObject
             ["Welder"] = "WelderItem", //PhysicalGunObject
             ["Welder2"] = "Welder2Item", //PhysicalGunObject
             ["Welder3"] = "Welder3Item", //PhysicalGunObject
@@ -253,9 +282,16 @@ namespace IngameScript
             ["HandDrill2"] = "HandDrill2Item", //PhysicalGunObject
             ["HandDrill3"] = "HandDrill3Item", //PhysicalGunObject
             ["HandDrill4"] = "HandDrill4Item", //PhysicalGunObject
-            ["NATO_5p56x45mmMagazine"] = "NATO_5p56x45mm", //AmmoMagazine
+            //["NATO_5p56x45mmMagazine"] = "NATO_5p56x45mm", //AmmoMagazine
             ["NATO_25x184mmMagazine"] = "NATO_25x184mm", //AmmoMagazine
             ["Missile200mm"] = "Missile200mm", //AmmoMagazine
+            ["SemiAutoPistolMagazine"] = "SemiAutoPistolMagazine", //AmmoMagazine
+            ["FullAutoPistolMagazine"] = "FullAutoPistolMagazine", //AmmoMagazine
+            ["ElitePistolMagazine"] = "ElitePistolMagazine", //AmmoMagazine
+            ["AutomaticRifleGun_Mag_20rd"] = "AutomaticRifleGun_Mag_20rd", //AmmoMagazine
+            ["RapidFireAutomaticRifleGun_Mag_50rd"] = "RapidFireAutomaticRifleGun_Mag_50rd", //AmmoMagazine
+            ["PreciseAutomaticRifleGun_Mag_5rd"] = "PreciseAutomaticRifleGun_Mag_5rd", //AmmoMagazine
+            ["UltimateAutomaticRifleGun_Mag_30rd"] = "UltimateAutomaticRifleGun_Mag_30rd", //AmmoMagazine
             ["Superconductor"] = "Superconductor", //Component
         };
 
@@ -290,6 +326,11 @@ namespace IngameScript
             ["RapidFireAutomaticRifle"] = "PhysicalGunObject",
             ["PreciseAutomaticRifle"] = "PhysicalGunObject",
             ["UltimateAutomaticRifle"] = "PhysicalGunObject",
+            ["BasicHandHeldLauncher"] = "PhysicalGunObject",
+            ["AdvancedHandHeldLauncher"] = "PhysicalGunObject",
+            ["SemiAutoPistol"] = "PhysicalGunObject",
+            ["FullAutoPistol"] = "PhysicalGunObject",
+            ["EliteAutoPistol"] = "PhysicalGunObject",
             ["Welder"] = "PhysicalGunObject",
             ["Welder2"] = "PhysicalGunObject",
             ["Welder3"] = "PhysicalGunObject",
@@ -302,9 +343,16 @@ namespace IngameScript
             ["HandDrill2"] = "PhysicalGunObject",
             ["HandDrill3"] = "PhysicalGunObject",
             ["HandDrill4"] = "PhysicalGunObject",
-            ["NATO_5p56x45mmMagazine"] = "AmmoMagazine",
+            //["NATO_5p56x45mmMagazine"] = "AmmoMagazine",
             ["NATO_25x184mmMagazine"] = "AmmoMagazine",
             ["Missile200mm"] = "AmmoMagazine",
+            ["SemiAutoPistolMagazine"] = "AmmoMagazine",
+            ["FullAutoPistolMagazine"] = "AmmoMagazine",
+            ["ElitePistolMagazine"] = "AmmoMagazine",
+            ["AutomaticRifleGun_Mag_20rd"] = "AmmoMagazine",
+            ["RapidFireAutomaticRifleGun_Mag_50rd"] = "AmmoMagazine",
+            ["PreciseAutomaticRifleGun_Mag_5rd"] = "AmmoMagazine",
+            ["UltimateAutomaticRifleGun_Mag_30rd"] = "AmmoMagazine",
             ["Superconductor"] = "Component",
         };
 
