@@ -15,12 +15,12 @@ steam_path = winreg.QueryValueEx(steam_key, "SteamPath")[0]
 default_lib_path = os.path.join(steam_path, "steamapps", "common")
 libraries_file_path = os.path.join(steam_path, "steamapps", "libraryfolders.vdf")
 with open(libraries_file_path, 'r') as f:
-    libraries_dic = vdf.load(f)['LibraryFolders']
+    libraries_dic = vdf.load(f)['libraryfolders']
 
 libraries = [default_lib_path]
 i = 1
 while str(i) in libraries_dic:
-    libraries.append(os.path.join(libraries_dic[str(i)].replace("\\\\", "\\"), "steamapps", "common"))
+    libraries.append(os.path.join(libraries_dic[str(i)]['path'].replace("\\\\", "\\"), "steamapps", "common"))
     i += 1
 
 found = False
