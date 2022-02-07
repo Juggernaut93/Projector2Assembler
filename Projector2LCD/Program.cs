@@ -30,6 +30,7 @@ namespace IngameScript
         private readonly bool refineriesFromSubgrids = false; // consider refineries on subgrids when computing average effectiveness
         private readonly bool autoResizeText = true; // makes the text fit inside the LCD. If true, it forces the font to be Monospace
         private readonly bool fitOn2IfPossible = true; // when true, if no valid third LCD is specified, the script will fit ingots and ores on the second LCD
+        private readonly bool onlyShowNeeded = false; // when true it only shows the needed amount of materials
         /**********************************************/
         /************ END OF CONFIGURATION ************/
         /**********************************************/
@@ -40,6 +41,9 @@ namespace IngameScript
         private const string lcd1Title = "Components: available | needed | missing";
         private const string lcd2Title = "Ingots: available | needed now/total | missing";
         private const string lcd3Title = "Ores: available | needed now/total | missing";
+        private const string lcd1TitleShort = "Components: needed";
+        private const string lcd2TitleShort = "Ingots: needed now/total";
+        private const string lcd3TitleShort = "Ores: needed now/total";
         private const string monospaceFontName = "Monospace";
         private const string effectivenessString = "Effectiveness:"; // the text shown in terminal which says the current effectiveness (= yield bonus) of the selected refinery
         private const string refineryMessage = "Math done with ~{0:F2}% refinery effectiveness\n({1}{2} ports with yield modules) ({3})";
@@ -861,7 +865,7 @@ namespace IngameScript
 
             var compList = GetTotalComponents(projector);
             List<KeyValuePair<string, int>> missingComponents = new List<KeyValuePair<string, int>>();
-            string output = localProjectorName + "\n" + lcd1Title.ToUpper() + "\n\n";
+            string output = localProjectorName + "\n" + (onlyShowNeeded ? lcd1TitleShort : lcd1Title).ToUpper() + "\n\n";
             foreach (var component in compList)
             {
                 string subTypeId = component.Key.Replace("MyObjectBuilder_BlueprintDefinition/", "");
@@ -885,7 +889,10 @@ namespace IngameScript
                     okStr = "   ";
                 }
 
-                output += String.Format("{0}{1} {2}|{3}|{4}\n", (missing > 0 ? warnStr : okStr), componentName, amountStr, neededStr, missingStr);
+                if (onlyShowNeeded)
+                    output += String.Format("{0}{1} {2}\n", (missing > 0 ? warnStr : okStr), componentName, neededStr);
+                else
+                    output += String.Format("{0}{1} {2}|{3}|{4}\n", (missing > 0 ? warnStr : okStr), componentName, amountStr, neededStr, missingStr);
             }
             if (lcd1 != null)
             {
@@ -896,7 +903,7 @@ namespace IngameScript
             var ingotsList = GetTotalIngots(missingComponents);
             var ingotsTotalNeeded = GetTotalIngots(compList);
             List<KeyValuePair<Ingots, VRage.MyFixedPoint>> missingIngots = new List<KeyValuePair<Ingots, VRage.MyFixedPoint>>();
-            output = localProjectorName + "\n" + lcd2Title.ToUpper() + "\n\n";
+            output = localProjectorName + "\n" + (onlyShowNeeded ? lcd2TitleShort : lcd2Title).ToUpper() + "\n\n";
             //string decimalFmt = (ingotDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", ingotDecimals));
             string decimalFmt = (ingotDecimals > 0 ? "." : "") + new string('0', ingotDecimals);
             for (int i = 0; i < ingotsList.Count; i++)
@@ -925,7 +932,10 @@ namespace IngameScript
                     okStr = "   ";
                 }
 
-                output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", (missing > 0 ? warnStr : okStr), ingotName, amountStr, separator, neededStr, totalNeededStr, missingStr);
+                if (onlyShowNeeded)
+                    output += String.Format("{0}{1} {2}/{3}\n", (missing > 0 ? warnStr : okStr), ingotName, neededStr, totalNeededStr);
+                else
+                    output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", (missing > 0 ? warnStr : okStr), ingotName, amountStr, separator, neededStr, totalNeededStr, missingStr);
             }
             if (lcd2 != null)
             {
@@ -939,11 +949,11 @@ namespace IngameScript
             //List<KeyValuePair<Ores, VRage.MyFixedPoint>> missingOres = new List<KeyValuePair<Ores, VRage.MyFixedPoint>>();
             if (lcd3 == null && fitOn2IfPossible)
             {
-                output = "\n" + lcd3Title.ToUpper() + "\n\n";
+                output = "\n" + (onlyShowNeeded ? lcd3TitleShort : lcd3Title).ToUpper() + "\n\n";
             }
             else
             {
-                output = localProjectorName + "\n" + lcd3Title.ToUpper() + "\n\n";
+                output = localProjectorName + "\n" + (onlyShowNeeded ? lcd3TitleShort : lcd3Title).ToUpper() + "\n\n";
             }
             //decimalFmt = (oreDecimals > 0 ? "." : "") + string.Concat(Enumerable.Repeat("0", oreDecimals));
             decimalFmt = (oreDecimals > 0 ? "." : "") + new string('0', oreDecimals);
@@ -987,14 +997,20 @@ namespace IngameScript
                     if (amountPresent > 0) // if 0 scrap, ignore row
                     {
                         //string na = string.Concat(Enumerable.Repeat(" ", (oreWidth - 1) / 2)) + "-" + string.Concat(Enumerable.Repeat(" ", oreWidth - 1 - (oreWidth - 1) / 2));
-                        output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", okStr, oreName, amountStr, separator, na, na, endNa);
+                        if (onlyShowNeeded)
+                            output += String.Format("{0}{1} {2}/{3}\n", okStr, oreName, na, na);
+                        else
+                            output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", okStr, oreName, amountStr, separator, na, na, endNa);
                         var savedIron = amountPresent * conversionData[Ores.Scrap].conversionRate * (1f / conversionData[Ores.Iron].conversionRate);
                         scrapOutput = "\n*" + String.Format(scrapMetalMessage, FormatNumber(amountPresent, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Scrap], FormatNumber(savedIron, oreWidth, oreDecimals).Trim(), oreTranslation[Ores.Iron]) + "\n";
                     }
                 }
                 else
                 {
-                    output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", (missing > 0 ? warnStr : okStr), oreName, amountStr, separator, neededStr, totalNeededStr, missingStr);
+                    if (onlyShowNeeded)
+                        output += String.Format("{0}{1} {2}/{3}\n", (missing > 0 ? warnStr : okStr), oreName, neededStr, totalNeededStr);
+                    else
+                        output += String.Format("{0}{1} {2}{3}{4}/{5}{3}{6}\n", (missing > 0 ? warnStr : okStr), oreName, amountStr, separator, neededStr, totalNeededStr, missingStr);
                 }
             }
 
