@@ -88,8 +88,8 @@ namespace IngameScript
             ["Datapad"] = "Datapad",
             // ammos
             //["NATO_5p56x45mmMagazine"] = "5.56x45mm NATO Magazine",
-            ["NATO_25x184mmMagazine"] = "25x184mm NATO ammo container",
-            ["Missile200mm"] = "200mm missile container",
+            ["NATO_25x184mmMagazine"] = "Gatling Ammo Box",
+            ["Missile200mm"] = "Missile",
             ["SemiAutoPistolMagazine"] = "S-10 Magazine",
             ["FullAutoPistolMagazine"] = "S-20A Magazine",
             ["ElitePistolMagazine"] = "S-10E Magazine",
@@ -97,6 +97,11 @@ namespace IngameScript
             ["RapidFireAutomaticRifleGun_Mag_50rd"] = "MR-50A Magazine",
             ["PreciseAutomaticRifleGun_Mag_5rd"] = "MR-8P Magazine",
             ["UltimateAutomaticRifleGun_Mag_30rd"] = "MR-30E Magazine",
+            ["AutocannonClip"] = "Autocannon Magazine",
+            ["LargeCalibreAmmo"] = "Artillery Shell",
+            ["MediumCalibreAmmo"] = "Assault Cannon Shell",
+            ["LargeRailgunAmmo"] = "Large Railgun Sabot",
+            ["SmallRailgunAmmo"] = "Small Railgun Sabot",
             // tools
             ["OxygenBottle"] = "Oxygen Bottle",
             ["HydrogenBottle"] = "Hydrogen Bottle",
@@ -208,6 +213,11 @@ namespace IngameScript
             ["PreciseAutomaticRifleGun_Mag_5rd"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
             ["UltimateAutomaticRifleGun_Mag_30rd"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("1.2"), [Ingots.Nickel] = FP("0.4"), [Ingots.Magnesium] = FP("0.25") },
             ["Missile200mm"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 55, [Ingots.Nickel] = 7, [Ingots.Magnesium] = FP("1.2"), [Ingots.Silicon] = FP("0.2"), [Ingots.Uranium] = FP("0.1"), [Ingots.Platinum] = FP("0.04") },
+            ["AutocannonClip"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 25, [Ingots.Nickel] = 3, [Ingots.Magnesium] = 2 },
+            ["LargeCalibreAmmo"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 60, [Ingots.Nickel] = 8, [Ingots.Magnesium] = 5, [Ingots.Uranium] = FP("0.1") },
+            ["MediumCalibreAmmo"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 15, [Ingots.Nickel] = 2, [Ingots.Magnesium] = FP("1.2") },
+            ["LargeRailgunAmmo"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 20, [Ingots.Nickel] = 3, [Ingots.Silicon] = 30, [Ingots.Uranium] = 1 },
+            ["SmallRailgunAmmo"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 4, [Ingots.Nickel] = FP("0.5"), [Ingots.Silicon] = 5, [Ingots.Uranium] = FP("0.2") },
             // tools
             ["OxygenBottle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 80, [Ingots.Nickel] = 30, [Ingots.Silicon] = 10 },
             ["HydrogenBottle"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 80, [Ingots.Nickel] = 30, [Ingots.Silicon] = 10 },
@@ -292,6 +302,11 @@ namespace IngameScript
             ["RapidFireAutomaticRifleGun_Mag_50rd"] = "RapidFireAutomaticRifleGun_Mag_50rd", //AmmoMagazine
             ["PreciseAutomaticRifleGun_Mag_5rd"] = "PreciseAutomaticRifleGun_Mag_5rd", //AmmoMagazine
             ["UltimateAutomaticRifleGun_Mag_30rd"] = "UltimateAutomaticRifleGun_Mag_30rd", //AmmoMagazine
+            ["AutocannonClip"] = "AutocannonClip", //AmmoMagazine
+            ["LargeCalibreAmmo"] = "LargeCalibreAmmo", //AmmoMagazine
+            ["MediumCalibreAmmo"] = "MediumCalibreAmmo", //AmmoMagazine
+            ["LargeRailgunAmmo"] = "LargeRailgunAmmo", //AmmoMagazine
+            ["SmallRailgunAmmo"] = "SmallRailgunAmmo", //AmmoMagazine
             ["Superconductor"] = "Superconductor", //Component
         };
 
@@ -353,6 +368,11 @@ namespace IngameScript
             ["RapidFireAutomaticRifleGun_Mag_50rd"] = "AmmoMagazine",
             ["PreciseAutomaticRifleGun_Mag_5rd"] = "AmmoMagazine",
             ["UltimateAutomaticRifleGun_Mag_30rd"] = "AmmoMagazine",
+            ["AutocannonClip"] = "AmmoMagazine",
+            ["LargeCalibreAmmo"] = "AmmoMagazine",
+            ["MediumCalibreAmmo"] = "AmmoMagazine",
+            ["LargeRailgunAmmo"] = "AmmoMagazine",
+            ["SmallRailgunAmmo"] = "AmmoMagazine",
             ["Superconductor"] = "Component",
         };
 
