@@ -10,37 +10,44 @@ import zipfile
 import tempfile
 from pathlib import Path
 
-steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\Valve\Steam")
-steam_path = winreg.QueryValueEx(steam_key, "SteamPath")[0]
-default_lib_path = os.path.join(steam_path, "steamapps", "common")
-libraries_file_path = os.path.join(steam_path, "steamapps", "libraryfolders.vdf")
-with open(libraries_file_path, 'r') as f:
-    libraries_dic = vdf.load(f)['libraryfolders']
-
-libraries = [default_lib_path]
-i = 1
-while str(i) in libraries_dic:
-    libraries.append(os.path.join(libraries_dic[str(i)]['path'].replace("\\\\", "\\"), "steamapps", "common"))
-    i += 1
-
 found = False
-for lib in libraries:
-    cur = os.path.join(lib, "SpaceEngineers")
-    if os.path.exists(os.path.join(cur, "Bin64", "SpaceEngineers.exe")):
-        SE_install_path = cur
-        SE_Steam_library = lib
-        print("Space Engineers install path detected.")
-        found = True
-        break
+try:
+    steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\Valve\Steam")
+    steam_path = winreg.QueryValueEx(steam_key, "SteamPath")[0]
+    default_lib_path = os.path.join(steam_path, "steamapps", "common")
+    libraries_file_path = os.path.join(steam_path, "steamapps", "libraryfolders.vdf")
+    with open(libraries_file_path, 'r') as f:
+        libraries_dic = vdf.load(f)['libraryfolders']
+
+    libraries = [default_lib_path]
+    i = 1
+    while str(i) in libraries_dic:
+        libraries.append(os.path.join(libraries_dic[str(i)]['path'].replace("\\\\", "\\"), "steamapps", "common"))
+        i += 1
+
+    for lib in libraries:
+        cur = os.path.join(lib, "SpaceEngineers")
+        if os.path.exists(os.path.join(cur, "Bin64", "SpaceEngineers.exe")):
+            SE_install_path = cur
+            SE_Steam_library = lib
+            print("Space Engineers install path detected.")
+            found = True
+            break
+except FileNotFoundError:
+    SE_Steam_library = None # ignore path auto-detection, proceed with manual path selection
 
 if not found:
     while not found:
-        SE_install_path = input("Couldn't find Space Engineers folder. Insert Space Engineers path here: ")
+        SE_install_path = input("Couldn't find the Space Engineers folder. Insert Space Engineers path here: ")
         if os.path.exists(os.path.join(SE_install_path, "Bin64", "SpaceEngineers.exe")):
             found = True
 
+if SE_Steam_library is not None:
+    SE_mod_path = os.path.abspath(os.path.join(SE_Steam_library, "..", "workshop", "content", "244850"))
+else:
+    SE_mod_path = input("Couldn't find Steam. Insert the Space Engineers mod folder path here: ")
+
 SE_user_path = os.path.join(os.getenv("APPDATA"), "SpaceEngineers")
-SE_mod_path = os.path.abspath(os.path.join(SE_Steam_library, "..", "workshop", "content", "244850"))
 SE_save_path = os.path.join(SE_user_path, "Saves")
 
 def getMaxSaveLength(users):
@@ -347,7 +354,10 @@ def main():
     w = Tk()
     w.withdraw() # to avoid showing window with messagebox
     
-    useSave = messagebox.askyesno(title = "Mod list source", message = "Do you want to get the mod list from a save file (recommended)?")
+    if not os.path.exists(SE_save_path):
+        useSave = False
+    else:
+        useSave = messagebox.askyesno(title = "Mod list source", message = "Do you want to get the mod list from a save file (recommended)?")
     
     if useSave:
         # res = filedialog.askdirectory(initialdir = SE_save_path)
