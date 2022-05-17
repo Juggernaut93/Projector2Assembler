@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <MDKVersion>1.2.31</MDKVersion>
-    <MDKGameBinPath>E:\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64</MDKGameBinPath>
-    <MDKInstallPath>c:\users\julia\appdata\local\microsoft\visualstudio\15.0_f42d8490\extensions\5eef1sto.qic</MDKInstallPath>
-    <MDKOutputPath>C:\Users\julia\AppData\Roaming\SpaceEngineers\IngameScripts\local</MDKOutputPath>
+    <MDKVersion>1.4.13</MDKVersion>
+    <MDKGameBinPath>H:\SteamLibrary\SteamApps\common\SpaceEngineers\Bin64</MDKGameBinPath>
+    <MDKInstallPath>c:\users\wilki\appdata\local\microsoft\visualstudio\16.0_f3c76a75\extensions\wfwmepzv.2hp</MDKInstallPath>
+    <MDKOutputPath>C:\Users\wilki\AppData\Roaming\SpaceEngineers\IngameScripts\local</MDKOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Sandbox.Common">
@@ -66,6 +66,10 @@
     <Reference Include="MDKUtilities">
       <HintPath>$(MDKInstallPath)\MDKUtilities.dll</HintPath>
       <Private>true</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>$(MDKGameBinPath)\System.Collections.Immutable.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Analyzer Include="$(MDKInstallPath)\Analyzers\MDKAnalyzer.dll" />
   </ItemGroup>
