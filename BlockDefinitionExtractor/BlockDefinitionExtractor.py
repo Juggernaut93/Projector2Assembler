@@ -221,6 +221,7 @@ bpnames = {
     "Thrust": "ThrustComponent",
     "Reactor": "ReactorComponent",
     "SolarCell": "SolarCell",
+    "EngineerPlushie": "EngineerPlushie",
     # Economy Components
     "ZoneChip": "ZoneChip",
 }
