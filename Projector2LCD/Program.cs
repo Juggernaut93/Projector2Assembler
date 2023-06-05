@@ -590,16 +590,18 @@ namespace IngameScript
         private double GetRefineryEffectiveness(IMyRefinery r)
         {
             string info = r.DetailedInfo;
+
             int startIndex = info.IndexOf(effectivenessString) + effectivenessString.Length;
-            string perc = info.Substring(startIndex, info.IndexOf("%", startIndex) - startIndex);
-            try
-            {
+            string perc = info.Substring(startIndex, info.IndexOf("%", startIndex) - startIndex).Trim();
+            if (effectivenessMapping.ContainsKey(perc))
                 return effectivenessMapping[perc];
-            }
-            catch (Exception)
-            {
-                return int.Parse(perc) / 100d;
-            }
+
+            // find sixth numerical value (assumes other languages use non-numerical decimal separator)
+            perc = System.Text.RegularExpressions.Regex.Matches(info, @"\d+")[5].Value;
+            if (effectivenessMapping.ContainsKey(perc))
+                return effectivenessMapping[perc];
+
+            return effectivenessMapping["100"]; // default
         }
 
         private struct Size
