@@ -1,6 +1,6 @@
 A set of Space Engineers scripts to produce and track info about blueprint and components building.
 
-Import the solution in Visual Studio 2019 with [Malware's Development Kit for Space Engineers (MDK-SE)](https://github.com/malware-dev/MDK-SE) installed. Version 15.9 or higher is required if you want to use the most recent version of MDK-SE.
+Import the solution in Visual Studio 2019 with [Malware's Development Kit for Space Engineers (MDK-SE)](https://github.com/malware-dev/MDK-SE) installed. Version 16.8 or higher is required if you want to use the most recent version of MDK-SE that supports VS 2019. Note that the most recent MDK-SE requires VS 2022, but I haven't updated the projects yet for VS 2022 (it should be trivial anyway if you want to try).
 
 [**Projector2Assembler**](ProjectorResourceBuilder): queue all the components needed to build a blueprint on your assembler.
 
