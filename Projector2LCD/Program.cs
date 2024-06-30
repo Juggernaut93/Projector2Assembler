@@ -360,6 +360,12 @@ namespace IngameScript
 
         public Dictionary<string, int> GetComponents(string definition)
         {
+            if (!blueprints.ContainsKey(definition))
+            {
+                string errorText = "Unknown Blocks in Blueprint. Go to https://github.com/Juggernaut93/Projector2Assembler, and follow instructions for BlockDefinitionExtractor.";
+                WriteToAll(errorText);
+                throw new Exception(errorText);
+            }
             return blueprints[definition];
         }
 
