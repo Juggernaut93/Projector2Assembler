@@ -84,6 +84,13 @@ namespace IngameScript
             ["Superconductor"] = "Superconductor Conduits",
             ["ThrustComponent"] = "Thruster Components",
             ["ZoneChip"] = "Zone Chip",
+            ["PrototechFrame"] = "Prototech Frame",
+            ["PrototechPanel"] = "Prototech Panel",
+            ["PrototechCapacitor"] = "Prototech Capacitor",
+            ["PrototechPropulsionUnit"] = "Prototech Propulsion Unit",
+            ["PrototechMachinery"] = "Prototech Machinery",
+            ["PrototechCircuitry"] = "Prototech Circuitry",
+            ["PrototechCoolingUnit"] = "Prototech Cooling Unit",
             // datapad
             ["Datapad"] = "Datapad",
             // ammos
@@ -202,6 +209,14 @@ namespace IngameScript
             // economy comps
             ["Datapad"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 1, [Ingots.Silicon] = 5, [Ingots.Stone] = 1 },
             ["ZoneChip"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled
+            // prototech comps
+            ["PrototechFrame"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled afaik
+            ["PrototechPanel"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled afaik
+            ["PrototechCapacitor"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled afaik
+            ["PrototechPropulsionUnit"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled afaik
+            ["PrototechMachinery"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled afaik
+            ["PrototechCircuitry"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled afaik
+            ["PrototechCoolingUnit"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { }, // cannot be assembled afaik
             // ammos
             //["NATO_5p56x45mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = FP("0.8"), [Ingots.Nickel] = FP("0.2"), [Ingots.Magnesium] = FP("0.15") },
             ["NATO_25x184mmMagazine"] = new Dictionary<Ingots, VRage.MyFixedPoint>() { [Ingots.Iron] = 40, [Ingots.Nickel] = 5, [Ingots.Magnesium] = 3 },
@@ -270,6 +285,13 @@ namespace IngameScript
             ["SolarCell"] = "SolarCell", //Component
             ["PowerCell"] = "PowerCell", //Component
             ["ZoneChip"] = "ZoneChip", //Component
+            ["PrototechFrame"] = "PrototechFrame", //Component
+            ["PrototechPanel"] = "PrototechPanel", //Component
+            ["PrototechCapacitor"] = "PrototechCapacitor", //Component
+            ["PrototechPropulsionUnit"] = "PrototechPropulsionUnit", //Component
+            ["PrototechMachinery"] = "PrototechMachinery", //Component
+            ["PrototechCircuitry"] = "PrototechCircuitry", //Component
+            ["PrototechCoolingUnit"] = "PrototechCoolingUnit", //Component
             ["Datapad"] = "Datapad", //Datapad
             ["AutomaticRifle"] = "AutomaticRifleItem", //PhysicalGunObject
             ["RapidFireAutomaticRifle"] = "RapidFireAutomaticRifleItem", //PhysicalGunObject
@@ -336,6 +358,13 @@ namespace IngameScript
             ["SolarCell"] = "Component",
             ["PowerCell"] = "Component",
             ["ZoneChip"] = "Component",
+            ["PrototechFrame"] = "Component",
+            ["PrototechPanel"] = "Component",
+            ["PrototechCapacitor"] = "Component",
+            ["PrototechPropulsionUnit"] = "Component",
+            ["PrototechMachinery"] = "Component",
+            ["PrototechCircuitry"] = "Component",
+            ["PrototechCoolingUnit"] = "Component",
             ["Datapad"] = "Datapad",
             ["AutomaticRifle"] = "PhysicalGunObject",
             ["RapidFireAutomaticRifle"] = "PhysicalGunObject",
