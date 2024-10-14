@@ -225,6 +225,14 @@ bpnames = {
     "SabiroidPlushie": "SabiroidPlushie",
     # Economy Components
     "ZoneChip": "ZoneChip",
+    # Prototech Components
+    "PrototechFrame": "PrototechFrame",
+    "PrototechPanel": "PrototechPanel",
+    "PrototechCapacitor": "PrototechCapacitor",
+    "PrototechPropulsionUnit": "PrototechPropulsionUnit",
+    "PrototechMachinery": "PrototechMachinery",
+    "PrototechCircuitry": "PrototechCircuitry",
+    "PrototechCoolingUnit": "PrototechCoolingUnit"
 }
 
 tempdirs = []
