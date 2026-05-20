@@ -12,7 +12,7 @@ from pathlib import Path
 
 found = False
 try:
-    steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\Valve\Steam")
+    steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Valve\Steam")
     steam_path = winreg.QueryValueEx(steam_key, "SteamPath")[0]
     default_lib_path = os.path.join(steam_path, "steamapps", "common")
     libraries_file_path = os.path.join(steam_path, "steamapps", "libraryfolders.vdf")
@@ -82,6 +82,9 @@ def updateSaveList(optMenu, folder, var):
         else:
             saves.append(save)
     saves.sort(key=lambda s: os.path.getmtime(os.path.join(userpath, s)), reverse=True)
+    if not saves:
+        var.set('')
+        return
     for i in saves:
         optMenu['menu'].add_command(label=i, command=lambda x=i: var.set(x))
     var.set(saves[0])
@@ -109,6 +112,10 @@ def showSelectSaveDialog(w, optionsUser, optionsSave):
     lUser.grid(row = 0, column = 0)
 
     userIds = [id for id in os.listdir(SE_save_path) if os.path.isdir(os.path.join(SE_save_path, id))]
+    if not userIds:
+        messagebox.showerror("Error", "No player IDs found in the Saves folder.")
+        w.destroy()
+        return False
     optionsUser.set(userIds[0])
     menuUser = OptionMenu(w, optionsUser, *userIds)
     menuUser.grid(row = 0, column = 1, sticky = "ew")
@@ -222,6 +229,7 @@ bpnames = {
     "Reactor": "ReactorComponent",
     "SolarCell": "SolarCell",
     "EngineerPlushie": "EngineerPlushie",
+    "EngineerPlushieSE2": "EngineerPlushieSE2",
     "SabiroidPlushie": "SabiroidPlushie",
     # Economy Components
     "ZoneChip": "ZoneChip",
