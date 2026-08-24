@@ -3,7 +3,7 @@
   <PropertyGroup>
     <MDKVersion>1.2.17</MDKVersion>
     <MDKMinify>
-      <Enabled>no</Enabled>
+      <Level>Lite</Level>
     </MDKMinify>
     <MDKTrimTypes>
       <Enabled>no</Enabled>
